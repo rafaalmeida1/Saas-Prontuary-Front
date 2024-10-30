@@ -1,0 +1,137 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { getProntuario, getAcompanhamentosByProntuario } from "@/lib/api";
+import { Prontuario, Acompanhamento } from "@/types";
+import { ArrowLeft, Edit, Plus } from "lucide-react";
+
+export default function ProntuarioDetailsPage({
+    params,
+}: {
+    params: { id: string };
+}) {
+    const [prontuario, setProntuario] = useState<Prontuario | null>(null);
+    const [acompanhamentos, setAcompanhamentos] = useState<Acompanhamento[]>([]);
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchProntuarioAndAcompanhamentos = async () => {
+            try {
+                const prontuarioData = await getProntuario(params.id);
+                setProntuario(prontuarioData);
+                const acompanhamentosData = await getAcompanhamentosByProntuario(params.id);
+                setAcompanhamentos(acompanhamentosData);
+            } catch (error) {
+                console.error("Error fetching medical record data:", error);
+            }
+        };
+        fetchProntuarioAndAcompanhamentos();
+    }, [params.id]);
+
+    if (!prontuario) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                Loading...
+            </div>
+        );
+    }
+
+    const renderCard = (title: string, fields: string[]) => (
+        <Card className="mb-4 max-w-full hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+                <CardTitle className="text-lg">{title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <dl className="grid grid-cols-1 gap-2">
+                    {fields.map((field) => (
+                        <div key={field} className="border-b pb-1">
+                            <dt className="font-semibold text-sm text-gray-600">
+                                {field.replace(/_/g, " ").charAt(0).toUpperCase() +
+                                    field.replace(/_/g, " ").slice(1)}:
+                            </dt>
+                            <dd className="mt-1 text-sm">
+                                {typeof prontuario[field as keyof Prontuario] === "boolean"
+                                    ? prontuario[field as keyof Prontuario]
+                                        ? "Yes"
+                                        : "No"
+                                    : prontuario[field as keyof Prontuario]}
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+            </CardContent>
+        </Card>
+    );
+
+    return (
+        <div className="max-w-full mx-auto px-2 py-6">
+            <Button onClick={() => router.push(`/patients/${prontuario.paciente_id}`)} className="mb-4 text-sm">
+                <ArrowLeft className="mr-1 h-4 w-4" /> Back to Patient
+            </Button>
+            <h1 className="text-2xl font-bold mb-4">Medical Record Details</h1>
+            <div className="grid grid-cols-1 gap-4">
+                {renderCard("General Information", ["historico_saude", "historico_nutricional", "observacoes"])}
+                {renderCard("Nutritional Assessment", ["nivel_assistencia_nutricao", "classificacao_apetite", "ingestao_alimentar", "tipo_dieta_atual"])}
+                {renderCard("Physical Condition", ["condicao_fisica", "presenca_edema", "localizacao_edema", "avaliacao_subjetiva", "apresenta_lipodistrofia", "localizacao_lipodistrofia"])}
+                {renderCard("Habits", ["frequencia_defecacao", "caracteristicas_fezes", "frequencia_miccao", "caracteristicas_urina", "qualidade_sono", "hora_dormir", "hora_acordar"])}
+                {renderCard("Health Status", ["sinais_e_sintomas", "historico_atual_patologias", "medicacoes_atuais", "dificuldade_engolir"])}
+                {renderCard("Diet Information", ["alimentos_preferidos", "alimentos_menos_preferidos", "alergias", "alergia_detalhes"])}
+                {renderCard("Evaluation", ["queixas_reclamacoes", "periodo_avaliacao", "mes", "evolucao_dietoterapica", "alteracoes_patologicas_farmacologicas", "tipo_prescricao", "prescricao_detalhada"])}
+            </div>
+            <Card className="mt-4 max-w-full hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                    <CardTitle className="text-lg">Follow-ups</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {acompanhamentos.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <Table className="table-auto min-w-full text-sm">
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead className="hidden md:table-cell">Weight (R/L)</TableHead>
+                                        <TableHead className="hidden md:table-cell">Height (R/L)</TableHead>
+                                        <TableHead className="hidden md:table-cell">BMI (R/L)</TableHead>
+                                        <TableHead className="hidden md:table-cell">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {acompanhamentos.map((acompanhamento) => (
+                                        <TableRow key={acompanhamento.id}>
+                                            <TableCell>{new Date(acompanhamento.data).toLocaleDateString()}</TableCell>
+                                            <TableCell className="hidden md:table-cell">{acompanhamento.peso_direito} / {acompanhamento.peso_esquerdo}</TableCell>
+                                            <TableCell className="hidden md:table-cell">{acompanhamento.altura_direita} / {acompanhamento.altura_esquerda}</TableCell>
+                                            <TableCell className="hidden md:table-cell">{acompanhamento.imc_direito} / {acompanhamento.imc_esquerdo}</TableCell>
+                                            <TableCell>
+                                                <Button variant="link" onClick={() => router.push(`/acompanhamentos/${acompanhamento.id}`)}>View Details</Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    ) : (
+                        <p className="text-sm">This medical record has no follow-ups yet.</p>
+                    )}
+                    <Button className="mt-2 text-sm" onClick={() => router.push(`/acompanhamentos/create?prontuario_id=${prontuario.id}`)}>
+                        <Plus className="mr-1 h-4 w-4" /> New Follow-up
+                    </Button>
+                </CardContent>
+            </Card>
+            <Button className="mt-4 text-sm" onClick={() => router.push(`/prontuarios/${prontuario.id}/edit`)}>
+                <Edit className="mr-1 h-4 w-4" /> Edit Medical Record
+            </Button>
+        </div>
+    );
+}

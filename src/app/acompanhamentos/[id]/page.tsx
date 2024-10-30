@@ -1,0 +1,120 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAcompanhamento } from "@/lib/api";
+import { Acompanhamento } from "@/types";
+import { ArrowLeft, Edit } from "lucide-react";
+
+export default function AcompanhamentoPage({
+    params,
+}: {
+    params: { id: string };
+}) {
+    const [acompanhamento, setAcompanhamento] = useState<Acompanhamento | null>(
+        null
+    );
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchAcompanhamento = async () => {
+            try {
+                const acompanhamentoData = await getAcompanhamento(params.id);
+                setAcompanhamento(acompanhamentoData);
+            } catch (error) {
+                console.error("Error fetching follow-up data:", error);
+            }
+        };
+        fetchAcompanhamento();
+    }, [params.id]);
+
+    if (!acompanhamento) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                Loading...
+            </div>
+        );
+    }
+
+    const renderCard = (title: string, fields: string[]) => (
+        <Card className="mb-6 hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+                <CardTitle>{title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {fields.map((field) => (
+                        <div key={field} className="border-b pb-2">
+                            <dt className="font-semibold text-sm text-gray-600">
+                                {field
+                                    .replace(/_/g, " ")
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                    field.replace(/_/g, " ").slice(1)}
+                                :
+                            </dt>
+                            <dd className="mt-1">
+                                {acompanhamento[field as keyof Acompanhamento]}
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+            </CardContent>
+        </Card>
+    );
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <Button
+                onClick={() =>
+                    router.push(`/prontuarios/${acompanhamento.prontuario_id}`)
+                }
+                className="mb-6"
+            >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Medical Record
+            </Button>
+            <h1 className="text-3xl font-bold mb-6">Follow-up Details</h1>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    {renderCard("General Information", ["data"])}
+                    {renderCard("Right Side Measurements", [
+                        "peso_direito",
+                        "altura_direita",
+                        "imc_direito",
+                        "porcentagem_gordura_direita",
+                        "altura_joelho_direito",
+                        "braco_direito",
+                        "punho_direito",
+                        "panturrilha_direita",
+                        "circunferencia_abdomen_direito",
+                        "circunferencia_pescoco_direito",
+                    ])}
+                </div>
+                <div>
+                    {renderCard("Left Side Measurements", [
+                        "peso_esquerdo",
+                        "altura_esquerda",
+                        "imc_esquerdo",
+                        "porcentagem_gordura_esquerda",
+                        "altura_joelho_esquerdo",
+                        "braco_esquerdo",
+                        "punho_esquerdo",
+                        "panturrilha_esquerda",
+                        "circunferencia_abdomen_esquerda",
+                        "circunferencia_pescoco_esquerdo",
+                    ])}
+                </div>
+            </div>
+            <Button
+                className="mt-4"
+                onClick={() =>
+                    router.push(`/acompanhamentos/${acompanhamento.id}/edit`)
+                }
+            >
+                <Edit className="mr-2 h-4 w-4" /> Edit Follow-up
+            </Button>
+        </div>
+    );
+}
