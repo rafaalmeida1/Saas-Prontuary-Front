@@ -28,11 +28,14 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    if(step !== 2) return
     setLoading(true)
     try {
       const token = await login(username, password.join(""))
       localStorage.setItem("token", token)
-      router.push("/")
+      setTimeout(() => {
+        router.push("/")
+      }, 650)
     } catch (error) {
       console.log(error)
       toast({
