@@ -62,7 +62,8 @@ export default function PatientDetailsPage({
                 </ButtonWithLoading>
                 <DeleteDialog
                     id={params.id}
-                    deleteFunc={() => deletePaciente(params.id)}
+                    deleteFunc={() => deletePaciente(params.id)} 
+                    typeReload='back'
                 />
             </div>
             <h1 className="text-3xl font-bold mb-6">{patient.nome}</h1>

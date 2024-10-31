@@ -88,6 +88,7 @@ export default function AcompanhamentoPage({
                 <DeleteDialog
                     id={acompanhamento.id}
                     deleteFunc={() => deleteAcompanhamento(String(acompanhamento.id))}
+                    typeReload='back'
                 />
             </div>
             <h1 className="text-3xl font-bold mb-6">

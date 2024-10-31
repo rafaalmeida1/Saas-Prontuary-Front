@@ -16,10 +16,11 @@ import { useState } from 'react';
 
 type DeleteDialogProps = {
   deleteFunc: (id: number | string) => Promise<void>
-  id: number | string
+  id: number | string,
+  typeReload: 'back' | 'reload'
 }
 
-export function DeleteDialog({  deleteFunc, id }: DeleteDialogProps) {
+export function DeleteDialog({  deleteFunc, id, typeReload }: DeleteDialogProps) {
   const [open, setOpen] = useState(false) 
   const onOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -29,7 +30,12 @@ export function DeleteDialog({  deleteFunc, id }: DeleteDialogProps) {
 
     await deleteFunc(id).then(() => {
       onOpenChange(false)
-      window.location.reload()
+      if(typeReload === 'back') {
+        window.history.back()
+      } else {
+
+        window.location.reload()
+      }
     }).catch((error) => {
       console.error('Error deleting:', error)
     })

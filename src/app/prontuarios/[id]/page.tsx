@@ -108,7 +108,8 @@ export default function ProntuarioDetailsPage({
 
                 <DeleteDialog
                     id={prontuario.id}
-                    deleteFunc={() => deleteProntuario(prontuario.id)}
+                    deleteFunc={() => deleteProntuario(prontuario.id)} 
+                    typeReload='back'
                 />
             </div>
             <h1 className="text-2xl font-bold mb-4">Detalhes do Prontuário</h1>
