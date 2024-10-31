@@ -13,7 +13,7 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
   if (!response.ok) {
     throw new Error('API request failed')
   }
-  return response.json()
+  return await response.json()
 }
 
 export async function login(username: string, password: string) {
