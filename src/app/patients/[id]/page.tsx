@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getPaciente, getProntuarioByPatientId } from "@/lib/api";
+import { deletePaciente, getPaciente, getProntuarioByPatientId } from "@/lib/api";
 import { Paciente, Prontuario } from "@/types";
 import Image from "next/image";
 import { ArrowLeft, Edit, FileText } from "lucide-react";
 import { LoadingPage, LoadingCard } from "@/components/ui/loading";
 import moment from "moment-timezone";
+import { DeleteDialog } from "@/components/delete-dialog";
 
 export default function PatientDetailsPage({
     params,
@@ -28,7 +29,7 @@ export default function PatientDetailsPage({
                 setPatient(patientData);
                 if (patientData.id) {
                     const prontuarioData = await getProntuarioByPatientId(
-                        patientData.id
+                        String(patientData.id)
                     );
                     setProntuario(prontuarioData);
                 }
@@ -51,13 +52,21 @@ export default function PatientDetailsPage({
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <ButtonWithLoading
-                onClick={() => router.push("/patients")}
-                className="mb-6"
-            >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista de
-                Pacientes
-            </ButtonWithLoading>
+            <div className="w-full flex items-center justify-between">
+                <ButtonWithLoading
+                    onClick={() => router.push("/patients")}
+                    className="mb-6"
+                >
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista
+                    de Pacientes
+                </ButtonWithLoading>
+                <DeleteDialog
+                    id={params.id}
+                    deleteFunc={() => deletePaciente(params.id)}
+                    open={false}
+                    onOpenChange={() => {}}
+                />
+            </div>
             <h1 className="text-3xl font-bold mb-6">{patient.nome}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="hover:shadow-lg transition-shadow duration-300">

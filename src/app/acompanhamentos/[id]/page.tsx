@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAcompanhamento } from "@/lib/api";
+import { deleteAcompanhamento, getAcompanhamento } from "@/lib/api";
 import { Acompanhamento } from "@/types";
 import { ArrowLeft, Edit } from "lucide-react";
 import { LoadingPage } from "@/components/ui/loading";
-import moment from "moment-timezone";
+import { DeleteDialog } from "@/components/delete-dialog";
 
 export default function AcompanhamentoPage({
     params,
@@ -72,15 +72,29 @@ export default function AcompanhamentoPage({
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <ButtonWithLoading
-                onClick={() =>
-                    router.push(`/prontuarios/${acompanhamento.prontuario_id}`)
-                }
-                className="mb-6"
-            >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o Prontuário
-            </ButtonWithLoading>
-            <h1 className="text-3xl font-bold mb-6">Detalhes do Acompanhamento</h1>
+            <div className="w-full flex items-center justify-between">
+                <ButtonWithLoading
+                    onClick={() =>
+                        router.push(
+                            `/prontuarios/${acompanhamento.prontuario_id}`
+                        )
+                    }
+                    className="mb-6"
+                >
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o
+                    Prontuário
+                </ButtonWithLoading>
+
+                <DeleteDialog
+                    id={acompanhamento.id}
+                    deleteFunc={() => deleteAcompanhamento(String(acompanhamento.id))}
+                    open={false}
+                    onOpenChange={() => {}}
+                />
+            </div>
+            <h1 className="text-3xl font-bold mb-6">
+                Detalhes do Acompanhamento
+            </h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
                     {renderCard("Informações Gerais", ["data"])}
