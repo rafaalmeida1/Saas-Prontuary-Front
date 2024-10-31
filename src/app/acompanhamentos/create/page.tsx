@@ -3,17 +3,8 @@ import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { ArrowLeft } from "lucide-react";
 import { CreateAcompanhamentoForm } from "./create-acompanhamento-form";
 import { LoadingPage } from "@/components/ui/loading";
-import { useRouter } from "next/navigation";
 
 export default function CreateAcompanhamentoPage() {
-    const router = useRouter();
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            router.push("/login");
-        }
-    }, []);
-
     return (
         <div className="container mx-auto px-4 py-8">
             <ButtonWithLoading className="mb-6">
