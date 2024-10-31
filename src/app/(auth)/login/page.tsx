@@ -38,7 +38,6 @@ export default function LoginPage() {
   }
 
   const handleLogin = async () => {
-    if(step !== 2) return
     setLoading(true)
     try {
       const token = await login(username, password.join(""))

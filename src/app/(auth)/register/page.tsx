@@ -24,7 +24,6 @@ export default function RegisterPage() {
   const { toast } = useToast()
 
   const handleRegister = async () => {
-    if(step != 2) return
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: 'Erro',
@@ -35,7 +34,6 @@ export default function RegisterPage() {
     }
     setLoading(true)
     try {
-      if(step != 2) return
       await register(formData.username, formData.email, formData.password)
       toast({
         title: 'Sucesso',
