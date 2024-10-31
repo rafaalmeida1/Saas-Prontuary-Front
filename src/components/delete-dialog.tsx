@@ -37,21 +37,23 @@ export function DeleteDialog({
         setOpen(newOpen);
     };
 
+    const router = useRouter();
+
     const handleDelete = async () => {
         await deleteFunc(id);
 
         setTimeout(() => {
             onOpenChange(false);
             if (typeReload === "acompanhamento_single") {
-                window.location.href = "/prontuarios/" + idHref;
+                router.push(`/prontuarios/${idHref}`);
             } else if (typeReload === "patients") {
-                window.location.reload();
+                router.refresh();
             } else if (typeReload === "patient_single") {
-                window.location.href = "/patients";
+                router.push("/patients");
             } else if (typeReload === "prontuario_single") {
-                window.location.href = "/patients/" + idHref;
+                router.push(`/patients/${idHref}`);
             }
-        }, 1000);
+        }, 500);
     };
 
     return (
