@@ -40,7 +40,7 @@ export function DeleteDialog({
     const router = useRouter();
 
     const handleDelete = async () => {
-        // await deleteFunc(id);
+        await deleteFunc(id);
 
         setTimeout(() => {
             onOpenChange(false);
