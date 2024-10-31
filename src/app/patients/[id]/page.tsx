@@ -114,7 +114,7 @@ export default function PatientDetailsPage({
                 ) : prontuario ? (
                     <Card className="hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
-                            <CardTitle>Prontuário Médico</CardTitle>
+                            <CardTitle>Prontuário Nutricional</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <dl className="space-y-2">
@@ -148,11 +148,11 @@ export default function PatientDetailsPage({
                 ) : (
                     <Card className="hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
-                            <CardTitle>Prontuário Médico</CardTitle>
+                            <CardTitle>Prontuário Nutricional</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p>
-                                Este paciente ainda não possui um prontuário médico
+                                Este paciente ainda não possui um prontuário Nutricional
                                 criado.
                             </p>
                             <ButtonWithLoading
