@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="min-h-screen flex flex-col">
             <header className="bg-primary text-primary-foreground p-4 flex justify-between items-center">
               <Link href="/" className="text-2xl font-bold">
-                PMS
+                Esperança e Vida
               </Link>
               <SidebarNav menuItems={menuItems} />
             </header>
