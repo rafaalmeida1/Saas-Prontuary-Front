@@ -33,7 +33,7 @@ export default function AcompanhamentoPage({
     if (!acompanhamento) {
         return (
             <div className="flex justify-center items-center h-screen">
-                Loading...
+                Carregando...
             </div>
         );
     }
@@ -73,13 +73,13 @@ export default function AcompanhamentoPage({
                 }
                 className="mb-6"
             >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Medical Record
+                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o Prontuário
             </Button>
-            <h1 className="text-3xl font-bold mb-6">Follow-up Details</h1>
+            <h1 className="text-3xl font-bold mb-6">Detalhes do Acompanhamento</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
-                    {renderCard("General Information", ["data"])}
-                    {renderCard("Right Side Measurements", [
+                    {renderCard("Informações Gerais", ["data"])}
+                    {renderCard("Medidas do lado direito", [
                         "peso_direito",
                         "altura_direita",
                         "imc_direito",
@@ -93,7 +93,7 @@ export default function AcompanhamentoPage({
                     ])}
                 </div>
                 <div>
-                    {renderCard("Left Side Measurements", [
+                    {renderCard("Medidas do lado esquerdo", [
                         "peso_esquerdo",
                         "altura_esquerda",
                         "imc_esquerdo",
@@ -113,7 +113,7 @@ export default function AcompanhamentoPage({
                     router.push(`/acompanhamentos/${acompanhamento.id}/edit`)
                 }
             >
-                <Edit className="mr-2 h-4 w-4" /> Edit Follow-up
+                <Edit className="mr-2 h-4 w-4" /> Editar Acompanhamento
             </Button>
         </div>
     );

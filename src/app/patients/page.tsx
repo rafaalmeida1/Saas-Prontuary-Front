@@ -38,13 +38,13 @@ export default function PatientsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <Button onClick={() => router.push("/")} className="mb-6">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
+                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o Início
             </Button>
-            <h1 className="text-3xl font-bold mb-6">Patients</h1>
+            <h1 className="text-3xl font-bold mb-6">Pacientes</h1>
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
                 <div className="relative w-full sm:w-64">
                     <Input
-                        placeholder="Search patients..."
+                        placeholder="Procurar pacientes..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-10"
@@ -56,7 +56,7 @@ export default function PatientsPage() {
                 </div>
                 <Button onClick={() => router.push("/patients/create")}>
                     <UserPlus className="mr-2 h-5 w-5" />
-                    New Patient
+                    Adicionar Paciente
                 </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -70,16 +70,16 @@ export default function PatientsPage() {
                         </CardHeader>
                         <CardContent>
                             <p>
-                                <strong>Gender:</strong> {patient.genero}
+                                <strong>Gênero:</strong> {patient.genero}
                             </p>
                             <p>
-                                <strong>Date of Birth:</strong>{" "}
+                                <strong>Data de Nascimento:</strong>{" "}
                                 {new Date(
                                     patient.data_nascimento
                                 ).toLocaleDateString()}
                             </p>
                             <p>
-                                <strong>Clinic Entry:</strong>{" "}
+                                <strong>Data de Entrada na Clínica:</strong>{" "}
                                 {new Date(
                                     patient.data_entrada_clinica
                                 ).toLocaleDateString()}
@@ -91,7 +91,7 @@ export default function PatientsPage() {
                                 }
                                 className="mt-4 p-0"
                             >
-                                View Details
+                                Ver detalhes
                             </Button>
                         </CardContent>
                     </Card>

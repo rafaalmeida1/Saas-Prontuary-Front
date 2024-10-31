@@ -113,7 +113,7 @@ export function CreateProntuarioForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Medical Record Information</CardTitle>
+        <CardTitle>Informações do Prontuário</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,7 +123,7 @@ export function CreateProntuarioForm() {
             return renderField(key, value)
           })}
           <Button type="submit" className="w-full">
-            <Save className="mr-2 h-4 w-4" /> Create Medical Record
+            <Save className="mr-2 h-4 w-4" /> Criar Prontuário
           </Button>
         </form>
       </CardContent>

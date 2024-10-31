@@ -45,15 +45,15 @@ export default function EditAcompanhamentoPage({ params }: { params: { id: strin
   }
 
   if (!formData) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
   }
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-bold mb-6">Edit Follow-up</h1>
+      <h1 className="text-3xl font-bold mb-6">Editar Acompanhamento</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Follow-up Information</CardTitle>
+          <CardTitle>Informações do Acompanhamento</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -73,7 +73,7 @@ export default function EditAcompanhamentoPage({ params }: { params: { id: strin
                 </div>
               )
             })}
-            <Button type="submit">Update Follow-up</Button>
+            <Button type="submit">Salvar</Button>
           </form>
         </CardContent>
       </Card>

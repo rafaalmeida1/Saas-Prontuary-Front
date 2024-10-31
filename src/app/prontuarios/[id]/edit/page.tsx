@@ -50,15 +50,15 @@ export default function EditProntuarioPage({ params }: { params: { id: string } 
   }
 
   if (!formData) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
   }
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-bold mb-6">Edit Medical Record</h1>
+      <h1 className="text-3xl font-bold mb-6">Editar Prontuário</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Medical Record Information</CardTitle>
+          <CardTitle>Informações do Prontuário</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -94,7 +94,7 @@ export default function EditProntuarioPage({ params }: { params: { id: string } 
                 </div>
               )
             })}
-            <Button type="submit">Update Medical Record</Button>
+            <Button type="submit">Salvar</Button>
           </form>
         </CardContent>
       </Card>

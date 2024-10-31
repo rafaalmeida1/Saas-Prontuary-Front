@@ -66,7 +66,7 @@ export function CreateAcompanhamentoForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Follow-up Information</CardTitle>
+        <CardTitle>Informações do Acompanhamento</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -94,7 +94,7 @@ export function CreateAcompanhamentoForm() {
             )
           })}
           <Button type="submit" className="w-full">
-            <Save className="mr-2 h-4 w-4" /> Create Follow-up
+            <Save className="mr-2 h-4 w-4" /> Salvar Acompanhamento
           </Button>
         </form>
       </CardContent>

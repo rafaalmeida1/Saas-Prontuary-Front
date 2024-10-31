@@ -39,7 +39,7 @@ export default function PatientDetailsPage({
     if (!patient) {
         return (
             <div className="flex justify-center items-center h-screen">
-                Loading...
+                Carregando...
             </div>
         );
     }
@@ -47,13 +47,13 @@ export default function PatientDetailsPage({
     return (
         <div className="container mx-auto px-4 py-8">
             <Button onClick={() => router.push("/patients")} className="mb-6">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Patients
+                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista de Pacientes
             </Button>
             <h1 className="text-3xl font-bold mb-6">{patient.nome}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="hover:shadow-lg transition-shadow duration-300">
                     <CardHeader>
-                        <CardTitle>Patient Information</CardTitle>
+                        <CardTitle>Informações do Paciente</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex flex-col items-center mb-4">
@@ -67,16 +67,16 @@ export default function PatientDetailsPage({
                         </div>
                         <dl className="space-y-2">
                             <div>
-                                <dt className="font-semibold">Gender:</dt>
+                                <dt className="font-semibold">Gênero:</dt>
                                 <dd>{patient.genero}</dd>
                             </div>
                             <div>
-                                <dt className="font-semibold">Race:</dt>
+                                <dt className="font-semibold">Raça:</dt>
                                 <dd>{patient.raca}</dd>
                             </div>
                             <div>
                                 <dt className="font-semibold">
-                                    Date of Birth:
+                                    Data de Nascimento:
                                 </dt>
                                 <dd>
                                     {new Date(
@@ -86,7 +86,7 @@ export default function PatientDetailsPage({
                             </div>
                             <div>
                                 <dt className="font-semibold">
-                                    Clinic Entry Date:
+                                    Data de Entrada na Clínica:
                                 </dt>
                                 <dd>
                                     {new Date(
@@ -101,20 +101,20 @@ export default function PatientDetailsPage({
                                 router.push(`/patients/${patient.id}/edit`)
                             }
                         >
-                            <Edit className="mr-2 h-4 w-4" /> Edit Patient
+                            <Edit className="mr-2 h-4 w-4" /> Editar Paciente
                         </Button>
                     </CardContent>
                 </Card>
                 {prontuario ? (
                     <Card className="hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
-                            <CardTitle>Medical Record</CardTitle>
+                            <CardTitle>Prontuário Médico</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <dl className="space-y-2">
                                 <div>
                                     <dt className="font-semibold">
-                                        Health History:
+                                        Histórico de Saúde:
                                     </dt>
                                     <dd className="line-clamp-3">
                                         {prontuario.historico_saude}
@@ -122,7 +122,7 @@ export default function PatientDetailsPage({
                                 </div>
                                 <div>
                                     <dt className="font-semibold">
-                                        Nutritional History:
+                                        Histórico Nutricional:
                                     </dt>
                                     <dd className="line-clamp-3">
                                         {prontuario.historico_nutricional}
@@ -135,19 +135,19 @@ export default function PatientDetailsPage({
                                     router.push(`/prontuarios/${prontuario.id}`)
                                 }
                             >
-                                <FileText className="mr-2 h-4 w-4" /> View Full
-                                Medical Record
+                                <FileText className="mr-2 h-4 w-4" /> Ver Prontuário Inteiro
                             </Button>
                         </CardContent>
                     </Card>
                 ) : (
                     <Card className="hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
-                            <CardTitle>Medical Record</CardTitle>
+                            <CardTitle>Prontuário Médico</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p>
-                                This patient does not have a medical record yet.
+                                Este paciente ainda não possui um prontuário médico
+                                criado.
                             </p>
                             <Button
                                 className="mt-4 w-full"
@@ -157,8 +157,7 @@ export default function PatientDetailsPage({
                                     )
                                 }
                             >
-                                <FileText className="mr-2 h-4 w-4" /> Create
-                                Medical Record
+                                <FileText className="mr-2 h-4 w-4" /> Criar Prontuário
                             </Button>
                         </CardContent>
                     </Card>
