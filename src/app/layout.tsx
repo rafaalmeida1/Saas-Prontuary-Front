@@ -6,6 +6,7 @@ import { Users, Home } from 'lucide-react'
 import './globals.css'
 import { AuthProvider } from '@/components/auth-provider'
 import { SidebarNav } from '@/components/sidebar-nav'
+import Image from "next/image"; 
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="min-h-screen flex flex-col">
             <header className="bg-primary text-primary-foreground p-4 flex justify-between items-center">
               <Link href="/" className="text-2xl font-bold">
-                Esperança e Vida
+                <Image src="../../public/logo-esperanca.png" alt="logo esperança e vida" width={150} />
               </Link>
               <SidebarNav menuItems={menuItems} />
             </header>
