@@ -8,6 +8,12 @@ import { SidebarNav } from '@/components/sidebar-nav'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    userScalable: false,
+};
+
 const menuItems = [
   { href: '/', label: 'Início' },
   { href: '/patients', label: 'Pacientes' }
