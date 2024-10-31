@@ -31,7 +31,8 @@ export function DeleteDialog({  deleteFunc, id, typeReload }: DeleteDialogProps)
     await deleteFunc(id).then(() => {
       onOpenChange(false)
       if(typeReload === 'back') {
-        window.history.back()
+        const router = useRouter()
+        router.back()
       } else {
 
         window.location.reload()
