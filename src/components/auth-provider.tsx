@@ -20,13 +20,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    setIsAuthenticated(!!token)
+    if (token) {
+      setIsAuthenticated(true)
+    } else {
+      setIsAuthenticated(false)
+    }
   }, [])
 
   useEffect(() => {
     const isPublicPage = pathname === '/login' || pathname === '/register'
     if (!isAuthenticated && !isPublicPage) {
       setShowLoginDialog(true)
+    } else {
+      setShowLoginDialog(false)
     }
   }, [isAuthenticated, pathname])
 
