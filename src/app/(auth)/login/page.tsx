@@ -16,8 +16,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { login } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Lock } from "lucide-react";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { User } from "lucide-react";
 
 export default function LoginPage() {
     const [step, setStep] = useState(1);
@@ -33,6 +32,8 @@ export default function LoginPage() {
             localStorage.setItem("token", token);
             router.push("/");
         } catch (error) {
+            console.log(error)
+            
             toast({
                 title: "Erro",
                 description: "Credenciais inválidas",

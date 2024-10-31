@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { Users, FileText, Activity, UserPlus, BarChart } from "lucide-react";
+import { Users, UserPlus } from "lucide-react";
 
 export default function Home() {
     return (

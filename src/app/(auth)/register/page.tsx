@@ -40,6 +40,7 @@ export default function RegisterPage() {
       })
       router.push('/login')
     } catch (error) {
+      console.log(error)
       toast({
         title: 'Erro',
         description: 'Falha ao criar conta',
