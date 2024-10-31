@@ -118,7 +118,7 @@ export default function PatientsPage() {
                                     Ver detalhes
                                 </ButtonWithLoading>
                                 <DeleteDialog
-                                    id={patient.id}
+                                    id={patient.id!}
                                     deleteFunc={() => deletePaciente(String(patient.id))}
                                     open={false}
                                     onOpenChange={() => {}}
