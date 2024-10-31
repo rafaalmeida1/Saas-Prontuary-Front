@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { LoginDialog } from './login-dialog'
 
 // Definição do tipo AuthContext
@@ -17,7 +17,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [showLoginDialog, setShowLoginDialog] = useState(false)
-  const router = useRouter()
   const pathname = usePathname()
 
   // Verifica o token ao carregar o componente
@@ -47,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     localStorage.removeItem('token')
     setIsAuthenticated(false)
-    router.push('/login')
+    window.location.href = '/login'
   }
 
   // Função fetch com autenticação
@@ -61,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const response = await fetch(url, { ...options, headers })
 
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       // Se o token estiver expirado ou inválido, faça logout
       logout()
       setShowLoginDialog(true)
