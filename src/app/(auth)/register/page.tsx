@@ -23,8 +23,7 @@ export default function RegisterPage() {
   const router = useRouter()
   const { toast } = useToast()
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleRegister = async () => {
     if(step != 2) return
     if (formData.password !== formData.confirmPassword) {
       toast({
@@ -36,6 +35,7 @@ export default function RegisterPage() {
     }
     setLoading(true)
     try {
+      if(step != 2) return
       await register(formData.username, formData.email, formData.password)
       toast({
         title: 'Sucesso',
@@ -68,7 +68,7 @@ export default function RegisterPage() {
             Preencha os campos abaixo para criar sua conta
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleRegister}>
+        <div>
           <CardContent className="space-y-4">
             <AnimatePresence mode="wait">
               {step === 1 && (
@@ -158,12 +158,12 @@ export default function RegisterPage() {
                 Próximo
               </ButtonWithLoading>
             ) : (
-              <ButtonWithLoading type="submit" className="w-full" loading={loading}>
+              <ButtonWithLoading onSubmit={handleRegister} className="w-full" loading={loading}>
                 Criar Conta
               </ButtonWithLoading>
             )}
           </CardFooter>
-        </form>
+        </div>
       </Card>
     </div>
   )

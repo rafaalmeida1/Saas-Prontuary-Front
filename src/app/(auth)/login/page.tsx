@@ -25,8 +25,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState(["", "", "", "", "", ""])
   const { toast } = useToast()
 
-  const handleEspera = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleEspera = async () => {
     setLoading(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 500))
@@ -38,8 +37,7 @@ export default function LoginPage() {
     }
   }
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleLogin = async () => {
     if(step !== 2) return
     setLoading(true)
     try {
@@ -77,7 +75,7 @@ export default function LoginPage() {
             Entre com suas credenciais para acessar o sistema
           </CardDescription>
         </CardHeader>
-        <form onSubmit={step != 1 ? handleLogin : handleEspera}>
+        <div>
           <CardContent className="space-y-4">
             <AnimatePresence mode="wait">
               {step === 1 && (
@@ -135,21 +133,21 @@ export default function LoginPage() {
               <ButtonWithLoading
                 type="button"
                 className="w-full"
-                onClick={() => setStep(2)}
+                onClick={handleEspera}
               >
                 Próximo
               </ButtonWithLoading>
             ) : (
               <ButtonWithLoading
-                type="submit"
                 className="w-full"
                 loading={loading}
+                onClick={handleLogin}
               >
                 Entrar
               </ButtonWithLoading>
             )}
           </CardFooter>
-        </form>
+        </div>
       </Card>
     </div>
   )
