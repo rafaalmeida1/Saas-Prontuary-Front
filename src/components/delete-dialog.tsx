@@ -17,10 +17,11 @@ import { useState } from 'react';
 type DeleteDialogProps = {
   deleteFunc: (id: number | string) => Promise<void>
   id: number | string,
-  typeReload: 'back' | 'reload'
+  typeReload: 'acompanhamento_single' | 'patients' | 'patient_single' | 'prontuario_single',
+  idHref?: string | number
 }
 
-export function DeleteDialog({  deleteFunc, id, typeReload }: DeleteDialogProps) {
+export function DeleteDialog({  deleteFunc, id, typeReload, idHref }: DeleteDialogProps) {
   const [open, setOpen] = useState(false) 
   const onOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
@@ -30,12 +31,14 @@ export function DeleteDialog({  deleteFunc, id, typeReload }: DeleteDialogProps)
 
     await deleteFunc(id).then(() => {
       onOpenChange(false)
-      if(typeReload === 'back') {
-        const router = useRouter()
-        router.back()
-      } else {
-
+      if(typeReload === 'acompanhamento_single') {
+        window.location.href = '/prontuarios/' + idHref
+      } else if(typeReload === 'patients') {
         window.location.reload()
+      } else if(typeReload === 'patient_single') {
+        window.location.href = '/patients'
+      } else if(typeReload === 'prontuario_single') {
+        window.location.href = '/patients/' + idHref
       }
     }).catch((error) => {
       console.error('Error deleting:', error)

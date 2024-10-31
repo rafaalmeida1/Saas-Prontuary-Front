@@ -120,7 +120,7 @@ export default function PatientsPage() {
                                 <DeleteDialog
                                     id={patient.id!}
                                     deleteFunc={() => deletePaciente(String(patient.id))}
-                                    typeReload='reload'
+                                    typeReload='patients'
                                 />
                             </div>
                         </CardContent>
