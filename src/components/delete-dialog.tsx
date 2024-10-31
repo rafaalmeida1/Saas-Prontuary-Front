@@ -31,7 +31,7 @@ export function DeleteDialog({  deleteFunc, id }: DeleteDialogProps) {
 
     await deleteFunc(id).then(() => {
       onOpenChange(false)
-      router.refresh()
+      window.location.reload()
     }).catch((error) => {
       console.error('Error deleting:', error)
     })
