@@ -120,8 +120,6 @@ export default function PatientsPage() {
                                 <DeleteDialog
                                     id={patient.id!}
                                     deleteFunc={() => deletePaciente(String(patient.id))}
-                                    open={false}
-                                    onOpenChange={() => {}}
                                 />
                             </div>
                         </CardContent>

@@ -12,16 +12,20 @@ import {
 } from './ui/dialog'
 
 import { Button } from './ui/button';
+import { useState } from 'react';
 
 type DeleteDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void 
   deleteFunc: (id: number | string) => Promise<void>
   id: number | string
 }
 
-export function DeleteDialog({ open, onOpenChange, deleteFunc, id }: DeleteDialogProps) {
+export function DeleteDialog({  deleteFunc, id }: DeleteDialogProps) {
   const router = useRouter()
+
+  const [open, setOpen] = useState(false) 
+  const onOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+  }
 
   const handleDelete = async () => {
 

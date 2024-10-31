@@ -63,8 +63,6 @@ export default function PatientDetailsPage({
                 <DeleteDialog
                     id={params.id}
                     deleteFunc={() => deletePaciente(params.id)}
-                    open={false}
-                    onOpenChange={() => {}}
                 />
             </div>
             <h1 className="text-3xl font-bold mb-6">{patient.nome}</h1>
