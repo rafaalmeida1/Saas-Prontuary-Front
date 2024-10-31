@@ -40,17 +40,21 @@ export function DeleteDialog({
     const router = useRouter();
 
     const handleDelete = async () => {
-        await deleteFunc(id);
+        // await deleteFunc(id);
 
         setTimeout(() => {
             onOpenChange(false);
-            if (typeReload === "acompanhamento_single") {
+            if (typeReload === "acompanhamento_single") { 
+                console.log("acompanhamento_single", idHref);
                 router.push(`/prontuarios/${idHref}`);
             } else if (typeReload === "patients") {
+                console.log("patients");
                 router.refresh();
-            } else if (typeReload === "patient_single") {
+            } else if (typeReload === "patient_single") { 
+                console.log("patient_single", idHref);
                 router.push("/patients");
             } else if (typeReload === "prontuario_single") {
+                console.log("prontuario_single", idHref);
                 router.push(`/patients/${idHref}`);
             }
         }, 500);

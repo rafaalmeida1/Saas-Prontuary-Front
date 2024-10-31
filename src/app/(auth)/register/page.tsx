@@ -25,6 +25,7 @@ export default function RegisterPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+    if(step != 2) return
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: 'Erro',

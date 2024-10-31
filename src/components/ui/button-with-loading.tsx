@@ -6,16 +6,18 @@ import { cn } from "@/lib/utils"
 interface ButtonWithLoadingProps extends ButtonProps {
   loading?: boolean
   children: React.ReactNode
+  type?: "button" | "submit" | "reset"
 }
 
 export function ButtonWithLoading({
   loading = false,
   children,
+  type = "button",
   className,
   ...props
 }: ButtonWithLoadingProps) {
   return (
-    <Button className={cn(className)} disabled={loading} {...props}>
+    <Button type={type} className={cn(className)} disabled={loading} {...props}>
       {loading && <LoadingButton />}
       {children}
     </Button>

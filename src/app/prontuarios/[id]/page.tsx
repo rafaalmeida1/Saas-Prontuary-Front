@@ -96,7 +96,7 @@ export default function ProntuarioDetailsPage({
     return (
         <div className="max-w-full mx-auto px-2 py-6">
             <div className="flex items-center justify-between w-full">
-                <ButtonWithLoading
+                <ButtonWithLoading 
                     onClick={() =>
                         router.push(`/patients/${prontuario.paciente_id}`)
                     }
