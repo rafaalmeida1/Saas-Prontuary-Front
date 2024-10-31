@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { ButtonWithLoading } from '@/components/ui/button-with-loading'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getAcompanhamento, updateAcompanhamento } from '@/lib/api'
 import { Acompanhamento } from '@/types'
+import { LoadingPage } from '@/components/ui/loading'
 
 export default function EditAcompanhamentoPage({ params }: { params: { id: string } }) {
   const [formData, setFormData] = useState<Acompanhamento | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -20,6 +23,8 @@ export default function EditAcompanhamentoPage({ params }: { params: { id: strin
         setFormData(acompanhamentoData)
       } catch (error) {
         console.error('Error fetching follow-up:', error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchAcompanhamento()
@@ -36,16 +41,23 @@ export default function EditAcompanhamentoPage({ params }: { params: { id: strin
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData) return
-    try {
+    setSubmitting(true)
+    try  {
       await updateAcompanhamento(params.id, formData)
       router.push(`/acompanhamentos/${params.id}`)
     } catch (error) {
       console.error('Error updating follow-up:', error)
+    } finally {
+      setSubmitting(false)
     }
   }
 
+  if (loading) {
+    return <LoadingPage />
+  }
+
   if (!formData) {
-    return <div>Carregando...</div>
+    return <div>Acompanhamento não encontrado</div>
   }
 
   return (
@@ -73,7 +85,7 @@ export default function EditAcompanhamentoPage({ params }: { params: { id: strin
                 </div>
               )
             })}
-            <Button type="submit">Salvar</Button>
+            <ButtonWithLoading type="submit" loading={submitting}>Salvar</ButtonWithLoading>
           </form>
         </CardContent>
       </Card>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { ButtonWithLoading } from '@/components/ui/button-with-loading'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,9 +10,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { getProntuario, updateProntuario } from '@/lib/api'
 import { Prontuario } from '@/types'
+import { LoadingPage } from '@/components/ui/loading'
 
 export default function EditProntuarioPage({ params }: { params: { id: string } }) {
   const [formData, setFormData] = useState<Prontuario | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -22,6 +25,8 @@ export default function EditProntuarioPage({ params }: { params: { id: string } 
         setFormData(prontuarioData)
       } catch (error) {
         console.error('Error fetching medical record:', error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchProntuario()
@@ -41,16 +46,23 @@ export default function EditProntuarioPage({ params }: { params: { id: string } 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData) return
+    setSubmitting(true)
     try {
       await updateProntuario(params.id, formData)
       router.push(`/prontuarios/${params.id}`)
     } catch (error) {
       console.error('Error updating medical record:', error)
+    } finally {
+      setSubmitting(false)
     }
   }
 
+  if (loading) {
+    return <LoadingPage />
+  }
+
   if (!formData) {
-    return <div>Carregando...</div>
+    return <div>Prontuário não encontrado</div>
   }
 
   return (
@@ -94,7 +106,7 @@ export default function EditProntuarioPage({ params }: { params: { id: string } 
                 </div>
               )
             })}
-            <Button type="submit">Salvar</Button>
+            <ButtonWithLoading type="submit" loading={submitting}>Salvar</ButtonWithLoading>
           </form>
         </CardContent>
       </Card>

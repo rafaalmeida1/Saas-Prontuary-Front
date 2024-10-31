@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { Users, UserPlus } from "lucide-react";
@@ -18,20 +18,20 @@ export default function Home() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col space-y-4">
-                        <Link href="/patients" className="w-full">
-                            <Button size="lg" className="w-full">
+                        <Link href="/patients" passHref>
+                            <ButtonWithLoading size="lg" className="w-full">
                                 Ver Pacientes
-                            </Button>
+                            </ButtonWithLoading>
                         </Link>
-                        <Link href="/patients/create" className="w-full">
-                            <Button
+                        <Link href="/patients/create" passHref>
+                            <ButtonWithLoading
                                 size="lg"
                                 className="w-full"
                                 variant="outline"
                             >
                                 <UserPlus className="mr-2 h-5 w-5" />
                                 Adicionar Paciente
-                            </Button>
+                            </ButtonWithLoading>
                         </Link>
                     </CardContent>
                 </Card>

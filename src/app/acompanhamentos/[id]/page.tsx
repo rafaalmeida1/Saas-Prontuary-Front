@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAcompanhamento } from "@/lib/api";
 import { Acompanhamento } from "@/types";
 import { ArrowLeft, Edit } from "lucide-react";
+import { LoadingPage } from "@/components/ui/loading";
 
 export default function AcompanhamentoPage({
     params,
@@ -16,6 +17,7 @@ export default function AcompanhamentoPage({
     const [acompanhamento, setAcompanhamento] = useState<Acompanhamento | null>(
         null
     );
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -25,17 +27,19 @@ export default function AcompanhamentoPage({
                 setAcompanhamento(acompanhamentoData);
             } catch (error) {
                 console.error("Error fetching follow-up data:", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchAcompanhamento();
     }, [params.id]);
 
+    if (loading) {
+        return <LoadingPage />;
+    }
+
     if (!acompanhamento) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                Carregando...
-            </div>
-        );
+        return <div>Acompanhamento não encontrado</div>;
     }
 
     const renderCard = (title: string, fields: string[]) => (
@@ -67,14 +71,14 @@ export default function AcompanhamentoPage({
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <Button
+            <ButtonWithLoading
                 onClick={() =>
                     router.push(`/prontuarios/${acompanhamento.prontuario_id}`)
                 }
                 className="mb-6"
             >
                 <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o Prontuário
-            </Button>
+            </ButtonWithLoading>
             <h1 className="text-3xl font-bold mb-6">Detalhes do Acompanhamento</h1>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
@@ -107,14 +111,14 @@ export default function AcompanhamentoPage({
                     ])}
                 </div>
             </div>
-            <Button
+            <ButtonWithLoading
                 className="mt-4"
                 onClick={() =>
                     router.push(`/acompanhamentos/${acompanhamento.id}/edit`)
                 }
             >
                 <Edit className="mr-2 h-4 w-4" /> Editar Acompanhamento
-            </Button>
+            </ButtonWithLoading>
         </div>
     );
 }

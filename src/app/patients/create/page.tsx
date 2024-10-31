@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { ButtonWithLoading } from '@/components/ui/button-with-loading'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { createPaciente } from '@/lib/api'
 import { Paciente } from '@/types'
+import { LoadingPage } from '@/components/ui/loading'
 
 export default function CreatePatientPage() {
   const [formData, setFormData] = useState<Paciente>({
@@ -20,6 +21,7 @@ export default function CreatePatientPage() {
     imagem_url: '',
   })
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +37,7 @@ export default function CreatePatientPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     try {
       let imageUrl = ''
       if (imageFile) {
@@ -52,7 +55,13 @@ export default function CreatePatientPage() {
       router.push('/patients')
     } catch (error) {
       console.error('Error creating patient:', error)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <LoadingPage />
   }
 
   return (
@@ -101,7 +110,7 @@ export default function CreatePatientPage() {
               <Label htmlFor="imagem">Imagem</Label>
               <Input id="imagem" name="imagem" type="file" accept="image/*" onChange={handleImageChange} />
             </div>
-            <Button type="submit">Criar Paciente</Button>
+            <ButtonWithLoading type="submit" loading={loading}>Criar Paciente</ButtonWithLoading>
           </form>
         </CardContent>
       </Card>

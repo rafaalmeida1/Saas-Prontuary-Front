@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPaciente, getProntuarioByPatientId } from "@/lib/api";
 import { Paciente, Prontuario } from "@/types";
 import Image from "next/image";
 import { ArrowLeft, Edit, FileText } from "lucide-react";
+import { LoadingPage, LoadingCard } from "@/components/ui/loading";
 
 export default function PatientDetailsPage({
     params,
@@ -16,6 +17,7 @@ export default function PatientDetailsPage({
 }) {
     const [patient, setPatient] = useState<Paciente | null>(null);
     const [prontuario, setProntuario] = useState<Prontuario | null>(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -31,24 +33,26 @@ export default function PatientDetailsPage({
                 }
             } catch (error) {
                 console.error("Error fetching patient data:", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchPatientAndProntuario();
     }, [params.id]);
 
+    if (loading) {
+        return <LoadingPage />;
+    }
+
     if (!patient) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                Carregando...
-            </div>
-        );
+        return <div>Patient not found</div>;
     }
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <Button onClick={() => router.push("/patients")} className="mb-6">
+            <ButtonWithLoading onClick={() => router.push("/patients")} className="mb-6">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista de Pacientes
-            </Button>
+            </ButtonWithLoading>
             <h1 className="text-3xl font-bold mb-6">{patient.nome}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card className="hover:shadow-lg transition-shadow duration-300">
@@ -95,17 +99,19 @@ export default function PatientDetailsPage({
                                 </dd>
                             </div>
                         </dl>
-                        <Button
+                        <ButtonWithLoading
                             className="mt-4 w-full"
                             onClick={() =>
                                 router.push(`/patients/${patient.id}/edit`)
                             }
                         >
                             <Edit className="mr-2 h-4 w-4" /> Editar Paciente
-                        </Button>
+                        </ButtonWithLoading>
                     </CardContent>
                 </Card>
-                {prontuario ? (
+                {loading ? (
+                    <LoadingCard />
+                ) : prontuario ? (
                     <Card className="hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
                             <CardTitle>Prontuário Médico</CardTitle>
@@ -129,14 +135,14 @@ export default function PatientDetailsPage({
                                     </dd>
                                 </div>
                             </dl>
-                            <Button
+                            <ButtonWithLoading
                                 className="mt-4 w-full"
                                 onClick={() =>
                                     router.push(`/prontuarios/${prontuario.id}`)
                                 }
                             >
                                 <FileText className="mr-2 h-4 w-4" /> Ver Prontuário Inteiro
-                            </Button>
+                            </ButtonWithLoading>
                         </CardContent>
                     </Card>
                 ) : (
@@ -149,7 +155,7 @@ export default function PatientDetailsPage({
                                 Este paciente ainda não possui um prontuário médico
                                 criado.
                             </p>
-                            <Button
+                            <ButtonWithLoading
                                 className="mt-4 w-full"
                                 onClick={() =>
                                     router.push(
@@ -158,7 +164,7 @@ export default function PatientDetailsPage({
                                 }
                             >
                                 <FileText className="mr-2 h-4 w-4" /> Criar Prontuário
-                            </Button>
+                            </ButtonWithLoading>
                         </CardContent>
                     </Card>
                 )}

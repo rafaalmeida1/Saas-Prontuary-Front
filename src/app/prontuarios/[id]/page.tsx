@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Table,
@@ -15,6 +15,7 @@ import {
 import { getProntuario, getAcompanhamentosByProntuario } from "@/lib/api";
 import { Prontuario, Acompanhamento } from "@/types";
 import { ArrowLeft, Edit, Plus } from "lucide-react";
+import { LoadingPage, LoadingCard } from "@/components/ui/loading";
 
 export default function ProntuarioDetailsPage({
     params,
@@ -23,6 +24,7 @@ export default function ProntuarioDetailsPage({
 }) {
     const [prontuario, setProntuario] = useState<Prontuario | null>(null);
     const [acompanhamentos, setAcompanhamentos] = useState<Acompanhamento[]>([]);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -34,17 +36,19 @@ export default function ProntuarioDetailsPage({
                 setAcompanhamentos(acompanhamentosData);
             } catch (error) {
                 console.error("Error fetching medical record data:", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchProntuarioAndAcompanhamentos();
     }, [params.id]);
 
+    if (loading) {
+        return <LoadingPage />;
+    }
+
     if (!prontuario) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                Carregando...
-            </div>
-        );
+        return <div>Prontuário não encontrado</div>;
     }
 
     const renderCard = (title: string, fields: string[]) => (
@@ -76,9 +80,9 @@ export default function ProntuarioDetailsPage({
 
     return (
         <div className="max-w-full mx-auto px-2 py-6">
-            <Button onClick={() => router.push(`/patients/${prontuario.paciente_id}`)} className="mb-4 text-sm">
+            <ButtonWithLoading onClick={() => router.push(`/patients/${prontuario.paciente_id}`)} className="mb-4 text-sm">
                 <ArrowLeft className="mr-1 h-4 w-4" /> Voltar para o Paciente
-            </Button>
+            </ButtonWithLoading>
             <h1 className="text-2xl font-bold mb-4">Detalhes do Prontuário</h1>
             <div className="grid grid-cols-1 gap-4">
                 {renderCard("Informação Geral", ["historico_saude", "historico_nutricional", "observacoes"])}
@@ -94,7 +98,9 @@ export default function ProntuarioDetailsPage({
                     <CardTitle className="text-lg">Acompanhamentos</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {acompanhamentos.length > 0 ? (
+                    {loading ? (
+                        <LoadingCard />
+                    ) : acompanhamentos.length > 0 ? (
                         <div className="overflow-x-auto">
                             <Table className="table-auto min-w-full text-sm">
                                 <TableHeader>
@@ -114,7 +120,7 @@ export default function ProntuarioDetailsPage({
                                             <TableCell className="hidden md:table-cell">{acompanhamento.altura_direita} / {acompanhamento.altura_esquerda}</TableCell>
                                             <TableCell className="hidden md:table-cell">{acompanhamento.imc_direito} / {acompanhamento.imc_esquerdo}</TableCell>
                                             <TableCell>
-                                                <Button variant="link" onClick={() => router.push(`/acompanhamentos/${acompanhamento.id}`)}>View Details</Button>
+                                                <ButtonWithLoading variant="link" onClick={() => router.push(`/acompanhamentos/${acompanhamento.id}`)}>View Details</ButtonWithLoading>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -124,14 +130,14 @@ export default function ProntuarioDetailsPage({
                     ) : (
                         <p className="text-sm">Essa ficha não possui acompanhamentos.</p>
                     )}
-                    <Button className="mt-2 text-sm" onClick={() => router.push(`/acompanhamentos/create?prontuario_id=${prontuario.id}`)}>
+                    <ButtonWithLoading className="mt-2 text-sm" onClick={() => router.push(`/acompanhamentos/create?prontuario_id=${prontuario.id}`)}>
                         <Plus className="mr-1 h-4 w-4" /> Adicionar Acompanhamento
-                    </Button>
+                    </ButtonWithLoading>
                 </CardContent>
             </Card>
-            <Button className="mt-4 text-sm" onClick={() => router.push(`/prontuarios/${prontuario.id}/edit`)}>
+            <ButtonWithLoading className="mt-4 text-sm" onClick={() => router.push(`/prontuarios/${prontuario.id}/edit`)}>
                 <Edit className="mr-1 h-4 w-4" /> Editar Prontuário
-            </Button>
+            </ButtonWithLoading>
         </div>
     );
 }

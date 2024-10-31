@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { ButtonWithLoading } from '@/components/ui/button-with-loading'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,6 +13,7 @@ import { User, Mail, Lock } from 'lucide-react'
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1)
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -32,6 +33,7 @@ export default function RegisterPage() {
       })
       return
     }
+    setLoading(true)
     try {
       await register(formData.username, formData.email, formData.password)
       toast({
@@ -46,6 +48,8 @@ export default function RegisterPage() {
         description: 'Falha ao criar conta',
         variant: 'destructive',
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -149,13 +153,13 @@ export default function RegisterPage() {
           </CardContent>
           <CardFooter>
             {step === 1 ? (
-              <Button type="button" className="w-full" onClick={() => setStep(2)}>
+              <ButtonWithLoading type="button" className="w-full" onClick={() => setStep(2)}>
                 Próximo
-              </Button>
+              </ButtonWithLoading>
             ) : (
-              <Button type="submit" className="w-full">
+              <ButtonWithLoading type="submit" className="w-full" loading={loading}>
                 Criar Conta
-              </Button>
+              </ButtonWithLoading>
             )}
           </CardFooter>
         </form>

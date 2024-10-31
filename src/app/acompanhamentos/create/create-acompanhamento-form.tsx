@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { ButtonWithLoading } from '@/components/ui/button-with-loading'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -35,6 +35,7 @@ export function CreateAcompanhamentoForm() {
     circunferencia_abdomen_esquerda: 0,
     circunferencia_pescoco_esquerdo: 0,
   })
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -55,11 +56,14 @@ export function CreateAcompanhamentoForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     try {
       await createAcompanhamento(formData as Acompanhamento)
       router.push(`/prontuarios/${formData.prontuario_id}`)
     } catch (error) {
       console.error('Error creating follow-up:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -93,9 +97,9 @@ export function CreateAcompanhamentoForm() {
               </div>
             )
           })}
-          <Button type="submit" className="w-full">
+          <ButtonWithLoading type="submit" className="w-full" loading={loading}>
             <Save className="mr-2 h-4 w-4" /> Salvar Acompanhamento
-          </Button>
+          </ButtonWithLoading>
         </form>
       </CardContent>
     </Card>

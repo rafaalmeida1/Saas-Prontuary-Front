@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { getPacientes } from "@/lib/api";
 import { Paciente } from "@/types";
 import { Search, UserPlus, ArrowLeft } from "lucide-react";
+import { LoadingPage, LoadingCard } from "@/components/ui/loading";
 
 export default function PatientsPage() {
     const [patients, setPatients] = useState<Paciente[]>([]);
     const [filteredPatients, setFilteredPatients] = useState<Paciente[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -23,6 +25,8 @@ export default function PatientsPage() {
                 setFilteredPatients(patientsData);
             } catch (error) {
                 console.error("Error fetching patients:", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchPatients();
@@ -35,11 +39,15 @@ export default function PatientsPage() {
         setFilteredPatients(filtered);
     }, [searchTerm, patients]);
 
+    if (loading) {
+        return <LoadingPage />;
+    }
+
     return (
         <div className="container mx-auto px-4 py-8">
-            <Button onClick={() => router.push("/")} className="mb-6">
+            <ButtonWithLoading onClick={() => router.push("/")} className="mb-6">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o Início
-            </Button>
+            </ButtonWithLoading>
             <h1 className="text-3xl font-bold mb-6">Pacientes</h1>
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
                 <div className="relative w-full sm:w-64">
@@ -54,10 +62,10 @@ export default function PatientsPage() {
                         size={20}
                     />
                 </div>
-                <Button onClick={() => router.push("/patients/create")}>
+                <ButtonWithLoading onClick={() => router.push("/patients/create")}>
                     <UserPlus className="mr-2 h-5 w-5" />
                     Adicionar Paciente
-                </Button>
+                </ButtonWithLoading>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPatients.map((patient) => (
@@ -84,7 +92,7 @@ export default function PatientsPage() {
                                     patient.data_entrada_clinica
                                 ).toLocaleDateString()}
                             </p>
-                            <Button
+                            <ButtonWithLoading
                                 variant="link"
                                 onClick={() =>
                                     router.push(`/patients/${patient.id}`)
@@ -92,7 +100,7 @@ export default function PatientsPage() {
                                 className="mt-4 p-0"
                             >
                                 Ver detalhes
-                            </Button>
+                            </ButtonWithLoading>
                         </CardContent>
                     </Card>
                 ))}

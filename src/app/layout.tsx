@@ -9,8 +9,8 @@ import { SidebarNav } from '@/components/sidebar-nav'
 const inter = Inter({ subsets: ['latin'] })
 
 const menuItems = [
-  { href: '/', label: 'Início', icon: Home },
-  { href: '/patients', label: 'Pacientes', icon: Users }
+  { href: '/', label: 'Início' },
+  { href: '/patients', label: 'Pacientes' }
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -34,7 +34,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       href={item.href}
                       className="flex items-center gap-2 p-2 rounded-lg hover:bg-secondary"
                     >
-                      <item.icon className="h-5 w-5" />
                       {item.label}
                     </Link>
                   ))}

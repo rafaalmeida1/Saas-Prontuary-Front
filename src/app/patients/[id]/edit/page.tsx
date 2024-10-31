@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { ButtonWithLoading } from '@/components/ui/button-with-loading'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,11 +10,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getPaciente, updatePaciente } from '@/lib/api'
 import { Paciente } from '@/types'
 import Image from 'next/image'
+import { LoadingPage } from '@/components/ui/loading'
 
 export default function EditPatientPage({ params }: { params: { id: string } }) {
   const [formData, setFormData] = useState<Paciente | null>(null)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -25,6 +28,8 @@ export default function EditPatientPage({ params }: { params: { id: string } }) 
         setImagePreview(patientData.imagem_url)
       } catch (error) {
         console.error('Error fetching patient:', error)
+      } finally {
+        setLoading(false)
       }
     }
     fetchPatient()
@@ -53,6 +58,7 @@ export default function EditPatientPage({ params }: { params: { id: string } }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData) return
+    setSubmitting(true)
     try {
       let imageUrl = formData.imagem_url
       if (imageFile) {
@@ -70,11 +76,17 @@ export default function EditPatientPage({ params }: { params: { id: string } }) 
       router.push(`/patients/${params.id}`)
     } catch (error) {
       console.error('Error updating patient:', error)
+    } finally {
+      setSubmitting(false)
     }
   }
 
+  if (loading) {
+    return <LoadingPage />
+  }
+
   if (!formData) {
-    return <div>Carregando...</div>
+    return <div>Patient not found</div>
   }
 
   return (
@@ -82,7 +94,8 @@ export default function EditPatientPage({ params }: { params: { id: string } }) 
       <h1 className="text-3xl font-bold mb-6">Editar Paciente</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Paciente: {formData.nome} </CardTitle>
+          <CardTitle>Paciente: {formData.nome} 
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -129,7 +142,7 @@ export default function EditPatientPage({ params }: { params: { id: string } }) 
                 <Image src={imagePreview} alt="Patient" width={200} height={200} className="mt-2 rounded-md" />
               </div>
             )}
-            <Button type="submit">Atualizar Paciente</Button>
+            <ButtonWithLoading type="submit" loading={submitting}>Atualizar Paciente</ButtonWithLoading>
           </form>
         </CardContent>
       </Card>

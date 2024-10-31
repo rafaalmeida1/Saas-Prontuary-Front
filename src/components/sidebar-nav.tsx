@@ -10,7 +10,6 @@ import { Menu } from 'lucide-react'
 type MenuItem = {
   href: string
   label: string
-  icon: React.ComponentType<{ className?: string }>
 }
 
 type SidebarNavProps = {
@@ -41,7 +40,6 @@ export function SidebarNav({ menuItems }: SidebarNavProps) {
                 }`}
                 onClick={() => setOpen(false)}
               >
-                <item.icon className="h-5 w-5" />
                 {item.label}
               </Link>
             ))}
