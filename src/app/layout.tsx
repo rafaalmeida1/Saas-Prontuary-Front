@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="min-h-screen flex flex-col">
             <header className="bg-primary text-primary-foreground p-4 flex justify-between items-center">
               <Link href="/" className="text-2xl font-bold">
-                <Image src="../../public/logo-esperanca.png" alt="logo esperança e vida" width={150} />
+                <Image src="/esperanca_e_vida_transparente.png" alt="logo esperança e vida" width={150} height={150} />
               </Link>
               <SidebarNav menuItems={menuItems} />
             </header>
