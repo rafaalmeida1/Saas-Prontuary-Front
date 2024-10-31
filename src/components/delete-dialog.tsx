@@ -20,8 +20,6 @@ type DeleteDialogProps = {
 }
 
 export function DeleteDialog({  deleteFunc, id }: DeleteDialogProps) {
-  const router = useRouter()
-
   const [open, setOpen] = useState(false) 
   const onOpenChange = (newOpen: boolean) => {
     setOpen(newOpen)
