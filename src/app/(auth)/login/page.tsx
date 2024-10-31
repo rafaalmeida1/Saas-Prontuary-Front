@@ -23,8 +23,20 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState(["", "", "", "", "", ""])
-  const router = useRouter()
   const { toast } = useToast()
+
+  const handleEspera = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      setStep(2)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,9 +45,7 @@ export default function LoginPage() {
     try {
       const token = await login(username, password.join(""))
       localStorage.setItem("token", token)
-      setTimeout(() => {
-        router.push("/")
-      }, 650)
+      window.location.href = "/"
     } catch (error) {
       console.log(error)
       toast({
@@ -67,7 +77,7 @@ export default function LoginPage() {
             Entre com suas credenciais para acessar o sistema
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={step != 1 ? handleLogin : handleEspera}>
           <CardContent className="space-y-4">
             <AnimatePresence mode="wait">
               {step === 1 && (
