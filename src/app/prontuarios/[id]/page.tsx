@@ -16,6 +16,7 @@ import { getProntuario, getAcompanhamentosByProntuario } from "@/lib/api";
 import { Prontuario, Acompanhamento } from "@/types";
 import { ArrowLeft, Edit, Plus } from "lucide-react";
 import { LoadingPage, LoadingCard } from "@/components/ui/loading";
+import moment from "moment-timezone";
 
 export default function ProntuarioDetailsPage({
     params,
@@ -115,7 +116,9 @@ export default function ProntuarioDetailsPage({
                                 <TableBody>
                                     {acompanhamentos.map((acompanhamento) => (
                                         <TableRow key={acompanhamento.id}>
-                                            <TableCell>{new Date(acompanhamento.data).toLocaleDateString()}</TableCell>
+                                            <TableCell>{moment(acompanhamento.data)
+                                        .tz("America/Sao_Paulo")
+                                        .format("DD/MM/YYYY")}</TableCell>
                                             <TableCell className="hidden md:table-cell">{acompanhamento.peso_direito} / {acompanhamento.peso_esquerdo}</TableCell>
                                             <TableCell className="hidden md:table-cell">{acompanhamento.altura_direita} / {acompanhamento.altura_esquerda}</TableCell>
                                             <TableCell className="hidden md:table-cell">{acompanhamento.imc_direito} / {acompanhamento.imc_esquerdo}</TableCell>

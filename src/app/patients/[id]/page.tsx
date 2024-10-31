@@ -9,6 +9,7 @@ import { Paciente, Prontuario } from "@/types";
 import Image from "next/image";
 import { ArrowLeft, Edit, FileText } from "lucide-react";
 import { LoadingPage, LoadingCard } from "@/components/ui/loading";
+import moment from "moment-timezone";
 
 export default function PatientDetailsPage({
     params,
@@ -50,8 +51,12 @@ export default function PatientDetailsPage({
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <ButtonWithLoading onClick={() => router.push("/patients")} className="mb-6">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista de Pacientes
+            <ButtonWithLoading
+                onClick={() => router.push("/patients")}
+                className="mb-6"
+            >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista de
+                Pacientes
             </ButtonWithLoading>
             <h1 className="text-3xl font-bold mb-6">{patient.nome}</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -83,9 +88,9 @@ export default function PatientDetailsPage({
                                     Data de Nascimento:
                                 </dt>
                                 <dd>
-                                    {new Date(
-                                        patient.data_nascimento
-                                    ).toLocaleDateString()}
+                                    {moment(patient.data_nascimento)
+                                        .tz("America/Sao_Paulo")
+                                        .format("DD/MM/YYYY")}
                                 </dd>
                             </div>
                             <div>
@@ -93,9 +98,9 @@ export default function PatientDetailsPage({
                                     Data de Entrada na Clínica:
                                 </dt>
                                 <dd>
-                                    {new Date(
-                                        patient.data_entrada_clinica
-                                    ).toLocaleDateString()}
+                                    {moment(patient.data_entrada_clinica)
+                                        .tz("America/Sao_Paulo")
+                                        .format("DD/MM/YYYY")}
                                 </dd>
                             </div>
                         </dl>
@@ -141,7 +146,8 @@ export default function PatientDetailsPage({
                                     router.push(`/prontuarios/${prontuario.id}`)
                                 }
                             >
-                                <FileText className="mr-2 h-4 w-4" /> Ver Prontuário Inteiro
+                                <FileText className="mr-2 h-4 w-4" /> Ver
+                                Prontuário Inteiro
                             </ButtonWithLoading>
                         </CardContent>
                     </Card>
@@ -152,8 +158,8 @@ export default function PatientDetailsPage({
                         </CardHeader>
                         <CardContent>
                             <p>
-                                Este paciente ainda não possui um prontuário Nutricional
-                                criado.
+                                Este paciente ainda não possui um prontuário
+                                Nutricional criado.
                             </p>
                             <ButtonWithLoading
                                 className="mt-4 w-full"
@@ -163,7 +169,8 @@ export default function PatientDetailsPage({
                                     )
                                 }
                             >
-                                <FileText className="mr-2 h-4 w-4" /> Criar Prontuário
+                                <FileText className="mr-2 h-4 w-4" /> Criar
+                                Prontuário
                             </ButtonWithLoading>
                         </CardContent>
                     </Card>

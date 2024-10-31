@@ -8,6 +8,7 @@ import { getAcompanhamento } from "@/lib/api";
 import { Acompanhamento } from "@/types";
 import { ArrowLeft, Edit } from "lucide-react";
 import { LoadingPage } from "@/components/ui/loading";
+import moment from "moment-timezone";
 
 export default function AcompanhamentoPage({
     params,

@@ -8,13 +8,15 @@ import { Input } from "@/components/ui/input";
 import { getPacientes } from "@/lib/api";
 import { Paciente } from "@/types";
 import { Search, UserPlus, ArrowLeft } from "lucide-react";
-import { LoadingPage, LoadingCard } from "@/components/ui/loading";
+import { LoadingPage } from "@/components/ui/loading";
+import moment from "moment-timezone";
 
 export default function PatientsPage() {
     const [patients, setPatients] = useState<Paciente[]>([]);
     const [filteredPatients, setFilteredPatients] = useState<Paciente[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(""); // Estado para erros
     const router = useRouter();
 
     useEffect(() => {
@@ -24,7 +26,8 @@ export default function PatientsPage() {
                 setPatients(patientsData);
                 setFilteredPatients(patientsData);
             } catch (error) {
-                console.error("Error fetching patients:", error);
+                console.error("Erro ao buscar pacientes:", error);
+                setError("Erro ao carregar pacientes. Tente novamente mais tarde.");
             } finally {
                 setLoading(false);
             }
@@ -49,6 +52,11 @@ export default function PatientsPage() {
                 <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para o Início
             </ButtonWithLoading>
             <h1 className="text-3xl font-bold mb-6">Pacientes</h1>
+            
+            {error && (
+                <p className="text-red-500 mb-4">{error}</p>
+            )}
+
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
                 <div className="relative w-full sm:w-64">
                     <Input
@@ -67,6 +75,7 @@ export default function PatientsPage() {
                     Adicionar Paciente
                 </ButtonWithLoading>
             </div>
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPatients.map((patient) => (
                     <Card
@@ -82,21 +91,19 @@ export default function PatientsPage() {
                             </p>
                             <p>
                                 <strong>Data de Nascimento:</strong>{" "}
-                                {new Date(
-                                    patient.data_nascimento
-                                ).toLocaleDateString()}
+                                {moment(patient.data_nascimento)
+                                    .tz("America/Sao_Paulo")
+                                    .format("DD/MM/YYYY")}
                             </p>
                             <p>
                                 <strong>Data de Entrada na Clínica:</strong>{" "}
-                                {new Date(
-                                    patient.data_entrada_clinica
-                                ).toLocaleDateString()}
+                                {moment(patient.data_entrada_clinica)
+                                    .tz("America/Sao_Paulo")
+                                    .format("DD/MM/YYYY")}
                             </p>
                             <ButtonWithLoading
                                 variant="link"
-                                onClick={() =>
-                                    router.push(`/patients/${patient.id}`)
-                                }
+                                onClick={() => router.push(`/patients/${patient.id}`)}
                                 className="mt-4 p-0"
                             >
                                 Ver detalhes
