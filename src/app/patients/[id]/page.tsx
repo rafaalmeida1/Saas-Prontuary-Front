@@ -23,6 +23,13 @@ export default function PatientDetailsPage({
     const router = useRouter();
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push("/login");
+        }
+    }, [])
+
+    useEffect(() => {
         const fetchPatientAndProntuario = async () => {
             try {
                 const patientData = await getPaciente(params.id);

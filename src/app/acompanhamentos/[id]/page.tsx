@@ -22,6 +22,13 @@ export default function AcompanhamentoPage({
     const router = useRouter();
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push("/login");
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchAcompanhamento = async () => {
             try {
                 const acompanhamentoData = await getAcompanhamento(params.id);
@@ -87,8 +94,10 @@ export default function AcompanhamentoPage({
 
                 <DeleteDialog
                     id={acompanhamento.id}
-                    deleteFunc={() => deleteAcompanhamento(String(acompanhamento.id))}
-                    typeReload='acompanhamento_single'
+                    deleteFunc={() =>
+                        deleteAcompanhamento(String(acompanhamento.id))
+                    }
+                    typeReload="acompanhamento_single"
                     idHref={acompanhamento.prontuario_id}
                 />
             </div>

@@ -21,6 +21,13 @@ export default function PatientsPage() {
     const router = useRouter();
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push("/login");
+        }
+    }, [])
+
+    useEffect(() => {
         const fetchPatients = async () => {
             try {
                 const patientsData = await getPacientes();

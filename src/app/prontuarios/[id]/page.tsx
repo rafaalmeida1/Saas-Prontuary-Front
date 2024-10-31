@@ -36,6 +36,13 @@ export default function ProntuarioDetailsPage({
     const router = useRouter();
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push("/login");
+        }
+    }, [])
+
+    useEffect(() => {
         const fetchProntuarioAndAcompanhamentos = async () => {
             try {
                 const prontuarioData = await getProntuario(params.id);
