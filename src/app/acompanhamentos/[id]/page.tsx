@@ -72,7 +72,14 @@ export default function AcompanhamentoPage({
                                     .replace(/_/g, " ")
                                     .charAt(0)
                                     .toUpperCase() +
-                                    field.replace(/_/g, " ").slice(1)}
+                                    field.replace(/_/g, " ").slice(1).replace('_direito', '')
+                                    .replace('_esquerdo', '')
+                                    .replace('_direita', '')
+                                    .replace('_esquerda', '')
+                                    .replace('direito', '')
+                                    .replace('esquerdo', '')
+                                    .replace('direita', '')
+                                    .replace('esquerda', '')}
                                 :
                             </dt>
                             <dd className="mt-1">
