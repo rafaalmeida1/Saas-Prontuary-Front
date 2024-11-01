@@ -10,6 +10,16 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
     Authorization: `Bearer ${token}`,
   }
   const response = await fetch(`${API_URL}${url}`, { ...options, headers })
+
+  // ver se o token está expirado ou inválido
+
+  if (response.status === 401 || response.status === 403) {
+    // Se o token estiver expirado ou inválido, faça logout
+    localStorage.removeItem('token')
+    window.location.href = '/login'
+  }
+
+
   if (!response.ok) {
     throw new Error('API request failed')
   }
