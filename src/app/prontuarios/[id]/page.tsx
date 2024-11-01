@@ -89,8 +89,8 @@ export default function ProntuarioDetailsPage({
                                     field as keyof Prontuario
                                 ] === "boolean"
                                     ? prontuario[field as keyof Prontuario]
-                                        ? "Yes"
-                                        : "No"
+                                        ? "Sim"
+                                        : "Não"
                                     : prontuario[field as keyof Prontuario]}
                             </dd>
                         </div>
@@ -229,7 +229,7 @@ export default function ProntuarioDetailsPage({
                                                         )
                                                     }
                                                 >
-                                                    View Details
+                                                    Ver Detalhes
                                                 </ButtonWithLoading>
                                             </TableCell>
                                         </TableRow>

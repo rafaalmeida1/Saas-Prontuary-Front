@@ -93,7 +93,7 @@ export default function PatientDetailsPage({
                         <dl className="space-y-2">
                             <div>
                                 <dt className="font-semibold">Gênero:</dt>
-                                <dd>{patient.genero}</dd>
+                                <dd>{patient.genero == 'male' ? 'Masculino' : patient.genero == 'female' ? 'Feminino' : 'Outro'}</dd>
                             </div>
                             <div>
                                 <dt className="font-semibold">Raça:</dt>

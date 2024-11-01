@@ -100,7 +100,7 @@ export default function PatientsPage() {
                         </CardHeader>
                         <CardContent>
                             <p>
-                                <strong>Gênero:</strong> {patient.genero}
+                                <strong>Gênero:</strong> <dd>{patient.genero == 'male' ? 'Masculino' : patient.genero == 'female' ? 'Feminino' : 'Outro'}</dd>
                             </p>
                             <p>
                                 <strong>Data de Nascimento:</strong>{" "}
