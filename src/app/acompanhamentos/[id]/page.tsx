@@ -60,7 +60,15 @@ export default function AcompanhamentoPage({
                     {fields.map((field) => (
                         <div key={field} className="border-b pb-2">
                             <dt className="font-semibold text-sm text-gray-600">
-                                {field
+                                {field  
+                                    .replace('_direito', '')
+                                    .replace('_esquerdo', '')
+                                    .replace('_direita', '')
+                                    .replace('_esquerda', '')
+                                    .replace('direito', '')
+                                    .replace('esquerdo', '')
+                                    .replace('direita', '')
+                                    .replace('esquerda', '')
                                     .replace(/_/g, " ")
                                     .charAt(0)
                                     .toUpperCase() +
@@ -108,30 +116,30 @@ export default function AcompanhamentoPage({
                 <div>
                     {renderCard("Informações Gerais", ["data"])}
                     {renderCard("Medidas do lado direito", [
-                        "peso",
-                        "altura",
-                        "imc",
-                        "porcentagem_gordura",
-                        "altura_joelho",
-                        "braco",
-                        "punho",
-                        "panturrilha",
-                        "circunferencia_abdomen",
-                        "circunferencia_pescoco",
+                        "peso_direito",
+                        "altura_direita",
+                        "imc_direito",
+                        "porcentagem_gordura_direita",
+                        "altura_joelho_direito",
+                        "braco_direito",
+                        "punho_direito",
+                        "panturrilha_direita",
+                        "circunferencia_abdomen_direito",
+                        "circunferencia_pescoco_direito",
                     ])}
                 </div>
                 <div>
                     {renderCard("Medidas do lado esquerdo", [
-                        "peso",
-                        "altura",
-                        "imc",
-                        "porcentagem_gordura",
-                        "altura_joelho",
-                        "braco",
-                        "punho",
-                        "panturrilha",
-                        "circunferencia_abdomen",
-                        "circunferencia_pescoco",
+                        "peso_esquerdo",
+                        "altura_esquerda",
+                        "imc_esquerdo",
+                        "porcentagem_gordura_esquerda",
+                        "altura_joelho_esquerdo",
+                        "braco_esquerdo",
+                        "punho_esquerdo",
+                        "panturrilha_esquerda",
+                        "circunferencia_abdomen_esquerda",
+                        "circunferencia_pescoco_esquerdo",
                     ])}
                 </div>
             </div>
