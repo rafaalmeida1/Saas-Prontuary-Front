@@ -1,153 +1,142 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { ButtonWithLoading } from "@/components/ui/button-with-loading"
+import React, { useState } from "react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
+import { ButtonWithLoading } from "@/components/ui/button-with-loading"
 import { login } from "@/lib/api"
-import { motion, AnimatePresence } from "framer-motion"
-import { User } from "lucide-react"
+import { useAuth } from "@/components/auth-provider"
+import { toastService } from "@/lib/toast-service"
+import Image from "next/image"
+import Link from "next/link"
+import { AlertCircle } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function LoginPage() {
-  const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState("")
-  const [password, setPassword] = useState(["", "", "", "", "", ""])
-  const { toast } = useToast()
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const { login: authLogin } = useAuth()
 
-  const handleEspera = async () => {
-    setLoading(true)
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      setStep(2)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    
+    if (!username || !password) {
+      setError("Por favor, preencha todos os campos")
+      return
     }
-  }
 
-  const handleLogin = async () => {
-    setLoading(true)
     try {
-      const token = await login(username, password.join(""))
-      localStorage.setItem("token", token)
-      window.location.href = "/"
+      setIsLoading(true)
+      const token = await login(username, password)
+      authLogin(token)
+      toastService.success("Login realizado com sucesso!")
     } catch (error) {
-      console.log(error)
-      toast({
-        title: "Erro",
-        description: "Credenciais inválidas",
-        variant: "destructive",
-      })
+      console.error("Login error:", error)
+      setError("Credenciais inválidas. Por favor, tente novamente.")
     } finally {
-      setLoading(false)
-    }
-  }
-
-  const handlePasswordChange = (index: number, value: string) => {
-    const newPassword = [...password]
-    newPassword[index] = value
-    setPassword(newPassword)
-
-    if (value && index < 5) {
-      document.getElementById(`password-${index + 1}`)?.focus()
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="transform translate-y-1/2 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>
-            Entre com suas credenciais para acessar o sistema
-          </CardDescription>
-        </CardHeader>
-        <div>
-          <CardContent className="space-y-4">
-            <AnimatePresence mode="wait">
-              {step === 1 && (
-                <motion.div
-                  key="username"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Usuário</Label>
-                    <div className="relative">
-                      <User
-                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                        size={18}
-                      />
-                      <Input
-                        id="username"
-                        placeholder="Digite seu usuário"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-secondary/20 p-4 sm:p-8">
+      <div className="absolute top-8 left-8">
+        <Image 
+          src="/esperanca_e_vida_transparente.png" 
+          alt="Logo Esperança e Vida" 
+          width={150} 
+          height={40}
+          className="h-10 w-auto" 
+        />
+      </div>
+      
+      <div className="absolute top-8 right-8">
+        <ThemeToggle />
+      </div>
+      
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Bem-vindo(a) de volta</h1>
+          <p className="text-muted-foreground">
+            Acesse sua conta para continuar
+          </p>
+        </div>
+        
+        <Card className="border-border/40 shadow-lg">
+          <CardHeader>
+            <CardTitle className="text-xl">Login</CardTitle>
+            <CardDescription>
+              Entre com seu usuário e senha para acessar o sistema
+            </CardDescription>
+          </CardHeader>
+          
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              {error && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               )}
-              {step === 2 && (
-                <motion.div
-                  key="password"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="space-y-2">
-                    <Label htmlFor="password-0">Senha</Label>
-                    <div className="space-y-2">
-                      <Input
-                        type="password"
-                        onChange={(e) => handlePasswordChange(0, e.target.value)}
-                        value={password[0]}
-                        id="password-0"
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-          <CardFooter>
-            {step === 1 ? (
+              
+              <div className="space-y-2">
+                <Label htmlFor="username">Nome de usuário</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Digite seu usuário"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Senha</Label>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+            </CardContent>
+            
+            <CardFooter className="flex flex-col">
               <ButtonWithLoading
-                type="button"
-                className="w-full"
-                onClick={handleEspera}
-              >
-                Próximo
-              </ButtonWithLoading>
-            ) : (
-              <ButtonWithLoading
-                className="w-full"
-                loading={loading}
-                onClick={handleLogin}
+                type="submit"
+                isLoading={isLoading}
+                loadingText="Entrando..."
+                className="w-full mb-4"
               >
                 Entrar
               </ButtonWithLoading>
-            )}
-          </CardFooter>
-        </div>
-      </Card>
+              
+              <p className="text-sm text-center text-muted-foreground mt-4">
+                <span className="mr-1">Não tem uma conta?</span>
+                <Link href="/register" className="text-primary hover:underline">
+                  Cadastre-se
+                </Link>
+              </p>
+            </CardFooter>
+          </form>
+        </Card>
+        
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Sistema de gerenciamento nutricional Esperança e Vida
+        </p>
+      </div>
     </div>
   )
 }

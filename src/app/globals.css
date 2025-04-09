@@ -2,98 +2,259 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: "Nunito", Arial, sans-serif; /* Fonte mais suave e moderna */
+:root {
+  /* Paleta de cores baseada nas cores da imagem */
+  --background: 220 15% 98%;
+  --foreground: 220 15% 15%;
+  --card: 220 15% 100%;
+  --card-foreground: 220 15% 15%;
+  --popover: 220 15% 98%;
+  --popover-foreground: 220 15% 15%;
+  --primary: 145 76% 45%; /* Verde vibrante como na imagem */
+  --primary-foreground: 220 15% 100%;
+  --secondary: 145 65% 92%; /* Tom suave de verde */
+  --secondary-foreground: 220 15% 15%;
+  --muted: 220 15% 90%;
+  --muted-foreground: 220 15% 50%;
+  --accent: 145 76% 55%; /* Outro tom de verde */
+  --accent-foreground: 220 15% 15%;
+  --destructive: 0 76% 55%;
+  --destructive-foreground: 220 15% 100%;
+  --border: 220 15% 85%;
+  --input: 220 15% 85%;
+  --ring: 145 76% 45%;
+  --chart-1: 145 76% 55%;
+  --chart-2: 190 58% 42%;
+  --chart-3: 45 74% 66%;
+  --chart-4: 27 87% 67%;
+  --chart-5: 10 90% 55%;
+  --radius: 0.75rem; /* Bordas um pouco mais arredondadas */
 }
 
-@layer base {
-  :root {
-    /* Paleta de cores baseada nas cores da imagem */
-    --background: 220 15% 98%;
-    --foreground: 220 15% 15%;
-    --card: 220 15% 100%;
-    --card-foreground: 220 15% 15%;
-    --popover: 220 15% 98%;
-    --popover-foreground: 220 15% 15%;
-    --primary: 145 76% 45%; /* Verde vibrante como na imagem */
-    --primary-foreground: 220 15% 100%;
-    --secondary: 145 65% 92%; /* Tom suave de verde */
-    --secondary-foreground: 220 15% 15%;
-    --muted: 220 15% 90%;
-    --muted-foreground: 220 15% 50%;
-    --accent: 145 76% 55%; /* Outro tom de verde */
-    --accent-foreground: 220 15% 15%;
-    --destructive: 0 76% 55%;
-    --destructive-foreground: 220 15% 100%;
-    --border: 220 15% 85%;
-    --input: 220 15% 85%;
-    --ring: 145 76% 45%;
-    --chart-1: 145 76% 55%;
-    --chart-2: 190 58% 42%;
-    --chart-3: 45 74% 66%;
-    --chart-4: 27 87% 67%;
-    --chart-5: 10 90% 55%;
-    --radius: 0.75rem; /* Bordas um pouco mais arredondadas */
-  }
-
-  /* Tema escuro */
-  .dark {
-    --background: 220 15% 12%;
-    --foreground: 220 15% 90%;
-    --card: 220 15% 15%;
-    --card-foreground: 220 15% 90%;
-    --popover: 220 15% 15%;
-    --popover-foreground: 220 15% 90%;
-    --primary: 145 76% 60%;
-    --primary-foreground: 220 15% 10%;
-    --secondary: 220 15% 25%;
-    --secondary-foreground: 220 15% 90%;
-    --muted: 220 15% 25%;
-    --muted-foreground: 220 15% 65%;
-    --accent: 145 76% 60%;
-    --accent-foreground: 220 15% 90%;
-    --destructive: 0 62.8% 40.6%;
-    --destructive-foreground: 220 15% 90%;
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
-    --ring: 145 76% 55%;
-    --chart-1: 145 76% 60%;
-    --chart-2: 190 60% 55%;
-    --chart-3: 35 80% 55%;
-    --chart-4: 290 65% 60%;
-    --chart-5: 330 75% 55%;
-  }
+/* Tema escuro */
+.dark {
+  --background: 220 15% 12%;
+  --foreground: 220 15% 90%;
+  --card: 220 15% 15%;
+  --card-foreground: 220 15% 90%;
+  --popover: 220 15% 15%;
+  --popover-foreground: 220 15% 90%;
+  --primary: 145 76% 60%;
+  --primary-foreground: 220 15% 10%;
+  --secondary: 220 15% 25%;
+  --secondary-foreground: 220 15% 90%;
+  --muted: 220 15% 25%;
+  --muted-foreground: 220 15% 65%;
+  --accent: 145 76% 60%;
+  --accent-foreground: 220 15% 90%;
+  --destructive: 0 62.8% 40.6%;
+  --destructive-foreground: 220 15% 90%;
+  --border: 220 15% 25%;
+  --input: 220 15% 25%;
+  --ring: 145 76% 55%;
+  --chart-1: 145 76% 60%;
+  --chart-2: 190 60% 55%;
+  --chart-3: 35 80% 55%;
+  --chart-4: 290 65% 60%;
+  --chart-5: 330 75% 55%;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Fontes personalizadas para títulos e texto */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-variable-jakarta text-foreground font-semibold tracking-tight;
+  }
+
+  /* Tamanhos de título aprimorados */
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
+  
+  h4 {
+    @apply text-lg md:text-xl;
+  }
+
+  /* Especificações para parágrafos */
+  p {
+    @apply leading-relaxed text-foreground/90;
+  }
+
+  /* Classes para links elegantes */
+  .link {
+    @apply text-primary hover:text-primary/80 transition-colors duration-200 underline-offset-4 hover:underline;
+  }
+}
+
+@layer components {
+  /* Estilização para cards com efeitos de hover elegantes */
+  .card-hover {
+    @apply relative transition-all duration-200 hover:shadow-md hover:translate-y-[-2px];
+  }
+
+  /* Chip de status  */
+  .status-chip {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .status-chip-green {
+    @apply status-chip bg-green-100 text-green-700;
+  }
+
+  .status-chip-yellow {
+    @apply status-chip bg-yellow-100 text-yellow-700;
+  }
+
+  .status-chip-red {
+    @apply status-chip bg-red-100 text-red-700;
+  }
+
+  .status-chip-blue {
+    @apply status-chip bg-blue-100 text-blue-700;
+  }
+
+  .status-chip-purple {
+    @apply status-chip bg-purple-100 text-purple-700;
   }
 
   /* Botão primário estilizado */
   .btn-primary {
-    @apply bg-primary text-primary-foreground rounded-[--radius] px-4 py-2 font-semibold;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 
+      rounded-[--radius] px-4 py-2 font-medium shadow-sm 
+      transition-all duration-200 ease-in-out
+      border border-transparent
+      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:ring-offset-1;
   }
 
-  /* Títulos para destacar as seções */
-  h1, h2, h3 {
-    @apply text-foreground font-bold;
+  /* Botão secundário estilizado */
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90
+      rounded-[--radius] px-4 py-2 font-medium
+      transition-all duration-200 ease-in-out
+      border border-secondary/20
+      focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:ring-offset-1;
   }
-  h1 {
-    @apply text-3xl md:text-4xl;
-  }
-  h2 {
-    @apply text-2xl md:text-3xl;
-  }
-  h3 {
-    @apply text-xl md:text-2xl;
+
+  /* Botão outline estilizado */
+  .btn-outline {
+    @apply bg-transparent text-foreground hover:bg-secondary/50
+      rounded-[--radius] px-4 py-2 font-medium
+      transition-all duration-200 ease-in-out
+      border border-border
+      focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-1;
   }
 
   /* Estilização para o banner */
   .banner {
     @apply bg-primary text-primary-foreground p-4 rounded-[--radius] text-center font-semibold;
   }
+
+  /* Ícone decorativo para seções */
+  .section-icon {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full 
+      bg-primary/10 text-primary mr-3;
+  }
+
+  /* Título de seção com decoração */
+  .section-title {
+    @apply flex items-center text-lg font-semibold mb-4;
+  }
+
+  /* Estilização para input que imita Stripe */
+  .input-stripe {
+    @apply block w-full rounded-md border border-input bg-transparent px-3 py-2
+      text-base placeholder:text-muted-foreground
+      focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
+      transition-all duration-200;
+  }
+
+  /* Estilização para tabelas */
+  .table-elegant {
+    @apply w-full rounded-md overflow-hidden border border-border;
+  }
+
+  .table-elegant thead {
+    @apply bg-muted;
+  }
+
+  .table-elegant th {
+    @apply py-3 px-4 text-sm font-medium text-muted-foreground text-left;
+  }
+
+  .table-elegant td {
+    @apply py-3 px-4 text-sm border-t border-border;
+  }
+
+  .table-elegant tr:hover {
+    @apply bg-muted/30;
+  }
+}
+
+/* Estilos para elementos específicos */
+.loading-dots {
+  @apply inline-flex space-x-1 items-center; 
+}
+
+.loading-dots > div {
+  @apply w-1.5 h-1.5 bg-current rounded-full opacity-70 animate-pulse;
+}
+
+.loading-dots > div:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.loading-dots > div:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+/* Suavizando a transição entre temas claro/escuro */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Estilizações para scrollbars modernas */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full border-4 border-solid border-transparent bg-clip-padding;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/30;
+}
+
+/* Personalização para fontes variáveis */
+.font-variable-inter {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-variable-jakarta {
+  font-family: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }

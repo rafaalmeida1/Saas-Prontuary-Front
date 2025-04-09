@@ -1,86 +1,129 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
-import { LoginDialog } from './login-dialog'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { getUserProfile } from '@/lib/api'
+import { toastService } from '@/lib/toast-service'
+import { PageLoader } from '@/components/ui/loading'
 
-// Definição do tipo AuthContext
-type AuthContextType = {
-  isAuthenticated: boolean
-  login: (token: string) => void
-  logout: () => void
-  fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>
+// Definindo tipos para o contexto de autenticação
+type User = {
+  id: string
+  username: string
+  role: string
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+type AuthContextType = {
+  user: User | null
+  isAuthenticated: boolean
+  isLoading: boolean
+  login: (token: string) => void
+  logout: () => void
+}
+
+// Criando o contexto de autenticação
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  login: () => {},
+  logout: () => {},
+})
+
+// Rotas públicas que não precisam de autenticação
+const publicRoutes = ['/login', '/register']
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [showLoginDialog, setShowLoginDialog] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
   const pathname = usePathname()
 
-  // Verifica o token ao carregar o componente
+  // Efeito para verificar a autenticação ao iniciar ou mudar de rota
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    setIsAuthenticated(!!token)
-  }, [])
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token')
 
-  // Exibe o modal de login caso esteja em uma página privada sem autenticação
-  useEffect(() => {
-    const isPublicPage = pathname === '/login' || pathname === '/register'
-    if (!isAuthenticated && !isPublicPage) {
-      setShowLoginDialog(true)
-    } else {
-      setShowLoginDialog(false)
+      // Se não há token e a rota não é pública, redireciona para login
+      if (!token) {
+        setUser(null)
+        setIsLoading(false)
+        
+        if (!publicRoutes.some(route => pathname.startsWith(route))) {
+          router.push('/login')
+        }
+        return
+      }
+
+      // Se há token, busca dados do usuário
+      try {
+        const userData = await getUserProfile()
+        setUser(userData)
+        
+        // Se estiver em uma rota pública mas já está autenticado, redireciona para o dashboard
+        if (publicRoutes.some(route => pathname.startsWith(route))) {
+          router.push('/')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+        localStorage.removeItem('token')
+        setUser(null)
+        
+        if (!publicRoutes.some(route => pathname.startsWith(route))) {
+          toastService.error('Sessão expirada. Por favor, faça login novamente.')
+          router.push('/login')
+        }
+      } finally {
+        setIsLoading(false)
+      }
     }
-  }, [isAuthenticated, pathname])
 
-  // Função para login
+    checkAuth()
+  }, [pathname, router])
+
+  // Função para fazer login
   const login = (token: string) => {
     localStorage.setItem('token', token)
-    setIsAuthenticated(true)
-    setShowLoginDialog(false)
+    setIsLoading(true)
+    router.push('/')
   }
 
-  // Função para logout
+  // Função para fazer logout
   const logout = () => {
     localStorage.removeItem('token')
-    setIsAuthenticated(false)
-    window.location.href = '/login'
+    setUser(null)
+    router.push('/login')
   }
 
-  // Função fetch com autenticação
-  const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-    const token = localStorage.getItem('token')
-    const headers = {
-      ...options.headers,
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-
-    const response = await fetch(url, { ...options, headers })
-
-    if (response.status === 401 || response.status === 403) {
-      // Se o token estiver expirado ou inválido, faça logout
-      logout()
-      setShowLoginDialog(true)
-    }
-    return response
+  // Renderiza um loader enquanto verifica a autenticação
+  if (isLoading) {
+    return <PageLoader text='Carregando...' />
   }
 
+  // Se a rota não é pública e o usuário não está autenticado, bloqueia o acesso
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+  const shouldBlockAccess = !isPublicRoute && !user
+
+  if (shouldBlockAccess) {
+    // Não renderiza nada enquanto redireciona
+    return null
+  }
+
+  // Provê o contexto de autenticação para a aplicação
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, fetchWithAuth }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        logout,
+      }}
+    >
       {children}
-      <LoginDialog open={showLoginDialog} onOpenChange={setShowLoginDialog} />
     </AuthContext.Provider>
   )
 }
 
-// Hook de autenticação
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
-}
+// Hook para usar o contexto de autenticação
+export const useAuth = () => useContext(AuthContext)

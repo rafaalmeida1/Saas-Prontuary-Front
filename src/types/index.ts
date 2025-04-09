@@ -46,12 +46,18 @@ export interface Paciente {
     alteracoes_patologicas_farmacologicas: string;
     tipo_prescricao: string;
     prescricao_detalhada: string;
+    updated_at?: string;
+    created_at?: string;
   }
   
   export interface Acompanhamento {
     id: string;
     prontuario_id: string;
     data: string;
+    data_consulta?: string;
+    peso?: number;
+    altura?: number;
+    imc?: number;
     peso_direito: number;
     altura_direita: number;
     imc_direito: number;
@@ -72,4 +78,7 @@ export interface Paciente {
     panturrilha_esquerda: number;
     circunferencia_abdomen_esquerda: number;
     circunferencia_pescoco_esquerdo: number;
+    updated_at?: string;
+    created_at?: string;
+    observacoes?: string;
   }

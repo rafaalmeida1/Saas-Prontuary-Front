@@ -9,6 +9,7 @@ import { Paciente, Prontuario } from "@/types";
 import Image from "next/image";
 import { ArrowLeft, Edit, FileText } from "lucide-react";
 import { LoadingPage, LoadingCard } from "@/components/ui/loading";
+import { imageStorage } from "@/lib/image-storage";
 import moment from "moment-timezone";
 import { DeleteDialog } from "@/components/delete-dialog";
 
@@ -21,27 +22,44 @@ export default function PatientDetailsPage({
     const [prontuario, setProntuario] = useState<Prontuario | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const [imageSrc, setImageSrc] = useState<string>("");
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
             router.push("/login");
         }
-    }, [])
+    }, [router]);
 
     useEffect(() => {
         const fetchPatientAndProntuario = async () => {
             try {
                 const patientData = await getPaciente(params.id);
                 setPatient(patientData);
+                
+                // Tentar buscar imagem do localStorage primeiro
+                const storedImage = imageStorage.getImage(params.id);
+                
+                // Se tiver uma URL de imagem no servidor, usamos ela se não tivermos uma local
+                if (patientData.imagem_url && storedImage === imageStorage.defaultImage) {
+                    setImageSrc(patientData.imagem_url);
+                } else {
+                    setImageSrc(storedImage);
+                }
+                
                 if (patientData.id) {
-                    const prontuarioData = await getProntuarioByPatientId(
-                        String(patientData.id)
-                    );
-                    setProntuario(prontuarioData);
+                    try {
+                        const prontuarioData = await getProntuarioByPatientId(
+                            String(patientData.id)
+                        );
+                        setProntuario(prontuarioData);
+                    } catch (error) {
+                        console.error("Erro ao buscar prontuário:", error);
+                        // Não falha se o prontuário não existe
+                    }
                 }
             } catch (error) {
-                console.error("Error fetching patient data:", error);
+                console.error("Erro ao buscar dados do paciente:", error);
             } finally {
                 setLoading(false);
             }
@@ -50,11 +68,21 @@ export default function PatientDetailsPage({
     }, [params.id]);
 
     if (loading) {
-        return <LoadingPage />;
+        return <LoadingPage text="Carregando dados do paciente..." />;
     }
 
     if (!patient) {
-        return <div>Patient not found</div>;
+        return (
+            <div className="container mx-auto p-6 text-center">
+                <h2 className="text-xl font-semibold mb-4">Paciente não encontrado</h2>
+                <p className="text-muted-foreground mb-6">O paciente solicitado não existe ou foi removido.</p>
+                <ButtonWithLoading
+                    onClick={() => router.push("/patients")}
+                >
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Voltar para a Lista de Pacientes
+                </ButtonWithLoading>
+            </div>
+        );
     }
 
     return (
@@ -83,17 +111,17 @@ export default function PatientDetailsPage({
                     <CardContent>
                         <div className="flex flex-col items-center mb-4">
                             <Image
-                                src={patient.imagem_url || "/placeholder.svg"}
+                                src={imageSrc || "/placeholder.svg"}
                                 alt={patient.nome}
                                 width={200}
                                 height={200}
-                                className="rounded-full"
+                                className="rounded-full object-cover"
                             />
                         </div>
                         <dl className="space-y-2">
                             <div>
                                 <dt className="font-semibold">Gênero:</dt>
-                                <dd>{patient.genero == 'male' ? 'Masculino' : patient.genero == 'female' ? 'Feminino' : 'Outro'}</dd>
+                                <dd>{patient.genero === 'male' ? 'Masculino' : patient.genero === 'female' ? 'Feminino' : 'Outro'}</dd>
                             </div>
                             <div>
                                 <dt className="font-semibold">Raça:</dt>
@@ -131,7 +159,7 @@ export default function PatientDetailsPage({
                     </CardContent>
                 </Card>
                 {loading ? (
-                    <LoadingCard />
+                    <LoadingCard text="Carregando prontuário..." />
                 ) : prontuario ? (
                     <Card className="hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
