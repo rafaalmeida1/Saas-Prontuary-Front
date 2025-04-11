@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getUserProfile, updateUserProfile, changePassword } from "@/lib/api";
-import { toastService } from "@/lib/toast-service";
+import { handleError, success, error } from '@/lib/toast-service'
 import { ButtonWithLoading } from "@/components/ui/button-with-loading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, User, KeyRound } from "lucide-react";
@@ -39,7 +39,7 @@ export default function ProfilePage() {
         setProfile(data);
         setUsername(data.username);
       } catch (error) {
-        toastService.handleError(error, "Não foi possível carregar o perfil do usuário");
+        handleError(error, "Não foi possível carregar o perfil do usuário");
       } finally {
         setLoading(false);
       }
@@ -64,9 +64,9 @@ export default function ProfilePage() {
         });
       }
       
-      toastService.success("Perfil atualizado com sucesso");
+      success("Perfil atualizado com sucesso");
     } catch (error) {
-      toastService.handleError(error, "Não foi possível atualizar o perfil");
+      handleError(error, "Não foi possível atualizar o perfil");
     } finally {
       setUpdating(false);
     }
@@ -78,7 +78,7 @@ export default function ProfilePage() {
     
     // Validate passwords
     if (newPassword !== confirmPassword) {
-      toastService.error("As senhas não coincidem");
+      error("As senhas não coincidem");
       return;
     }
     
@@ -91,9 +91,9 @@ export default function ProfilePage() {
       setNewPassword("");
       setConfirmPassword("");
       
-      toastService.success("Senha alterada com sucesso");
+      success("Senha alterada com sucesso");
     } catch (error) {
-      toastService.handleError(error, "Não foi possível alterar a senha");
+      handleError(error, "Não foi possível alterar a senha");
     } finally {
       setChangingPassword(false);
     }

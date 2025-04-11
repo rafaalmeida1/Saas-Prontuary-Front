@@ -26,7 +26,7 @@ export default function AcompanhamentoPage({
         if (!token) {
             router.push("/login");
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const fetchAcompanhamento = async () => {

@@ -8,7 +8,7 @@ import { ButtonWithLoading } from '@/components/ui/button-with-loading';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRouter } from 'next/navigation';
 import { createPaciente } from '@/lib/api';
-import { toastService } from '@/lib/toast-service';
+import { success, handleError, error as showError } from '@/lib/toast-service';
 import { ArrowLeft, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -71,7 +71,7 @@ export default function CreatePatientPage() {
       }
       
       setIsSuccess(true);
-      toastService.success('Paciente cadastrado com sucesso!');
+      success('Paciente cadastrado com sucesso!');
       
       // Redirect to patients list after successful creation
       setTimeout(() => {
@@ -79,7 +79,7 @@ export default function CreatePatientPage() {
       }, 1500);
     } catch (error) {
       setIsSubmitting(false);
-      toastService.handleError(error, 'Erro ao cadastrar paciente');
+      handleError(error, 'Erro ao cadastrar paciente');
     }
   };
 
@@ -192,7 +192,7 @@ export default function CreatePatientPage() {
                     id={tempId}
                     value={formData.imagem_url}
                     onChange={handleImageChange}
-                    onError={(error) => toastService.error(error.message)}
+                    onError={(error) => showError(error.message)}
                     maxWidth={250}
                     maxHeight={250}
                   />

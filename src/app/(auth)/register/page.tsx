@@ -156,7 +156,7 @@ export default function RegisterPage() {
                 Próximo
               </ButtonWithLoading>
             ) : (
-              <ButtonWithLoading onSubmit={handleRegister} className="w-full" loading={loading}>
+              <ButtonWithLoading onSubmit={handleRegister} className="w-full" isLoading={loading}>
                 Criar Conta
               </ButtonWithLoading>
             )}

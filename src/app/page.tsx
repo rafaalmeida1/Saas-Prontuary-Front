@@ -25,8 +25,8 @@ import {
 } from "@/lib/api";
 import { Paciente, Prontuario } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toastService } from "@/lib/toast-service";
 import { formatDate } from "@/lib/utils";
+import { handleError } from '@/lib/toast-service'
 
 // Interface para as estatísticas
 interface DashboardStats {
@@ -135,7 +135,7 @@ export default function Home() {
         setPacientesRecentes(pacientesRecentes);
         
       } catch (error) {
-        toastService.handleError(error, "Não foi possível carregar os dados do dashboard");
+        handleError(error, "Não foi possível carregar os dados do dashboard");
         // Definir dados fictícios para não quebrar a interface
         setStats({
           pacientes: 0,
@@ -172,7 +172,7 @@ export default function Home() {
               trendUp={true}
             />
             
-            <StatCard 
+            {/* <StatCard 
               title="Prontuários"
               value={isLoading ? null : stats?.prontuarios ?? 0}
               description="Prontuários ativos"
@@ -194,7 +194,7 @@ export default function Home() {
               description="Registros de acompanhamento"
               icon={<Activity className="h-5 w-5" />}
               trend={stats?.ultimaConsulta ? `Última: ${formatDate(stats.ultimaConsulta)}` : null}
-            />
+            /> */}
           </div>
         </section>
         

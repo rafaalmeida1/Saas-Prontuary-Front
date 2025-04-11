@@ -7,12 +7,12 @@ import { Label } from "@/components/ui/label"
 import { ButtonWithLoading } from "@/components/ui/button-with-loading"
 import { login } from "@/lib/api"
 import { useAuth } from "@/components/auth-provider"
-import { toastService } from "@/lib/toast-service"
 import Image from "next/image"
 import Link from "next/link"
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { success } from "@/lib/toast-service"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -34,7 +34,7 @@ export default function LoginPage() {
       setIsLoading(true)
       const token = await login(username, password)
       authLogin(token)
-      toastService.success("Login realizado com sucesso!")
+      success("Login realizado com sucesso!")
     } catch (error) {
       console.error("Login error:", error)
       setError("Credenciais inválidas. Por favor, tente novamente.")

@@ -15,7 +15,7 @@ export default function CreateProntuarioPage() {
         if (!token) {
             router.push("/login");
         }
-    }, []);
+    }, [router]);
 
     return (
         <div className="container mx-auto px-4 py-8">

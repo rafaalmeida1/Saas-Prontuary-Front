@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { getUserProfile } from '@/lib/api'
-import { toastService } from '@/lib/toast-service'
+import { error as showError } from '@/lib/toast-service'
 import { PageLoader } from '@/components/ui/loading'
 
 // Definindo tipos para o contexto de autenticação
@@ -70,7 +70,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
         
         if (!publicRoutes.some(route => pathname.startsWith(route))) {
-          toastService.error('Sessão expirada. Por favor, faça login novamente.')
+          if (error instanceof Error) {
+            showError('Sessão expirada. Por favor, faça login novamente.')
+          }
           router.push('/login')
         }
       } finally {

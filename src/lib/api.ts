@@ -1,7 +1,7 @@
 import { Paciente, Prontuario, Acompanhamento } from '@/types'
 
-// const API_URL = 'https://saas-prontuary-production.up.railway.app/api'
-const API_URL = 'http://localhost:3333/api'
+const API_URL = 'https://saas-prontuary-production.up.railway.app/api'
+// const API_URL = 'http://localhost:3333/api'
 
 // Custom error class for API errors with specific error types and status codes
 export class ApiError extends Error {

@@ -40,7 +40,7 @@ export default function ProntuarioDetailsPage({
         if (!token) {
             router.push("/login");
         }
-    }, [])
+    }, [router]);
 
     useEffect(() => {
         const fetchProntuarioAndAcompanhamentos = async () => {

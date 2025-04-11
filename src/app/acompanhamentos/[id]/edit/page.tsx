@@ -25,7 +25,7 @@ export default function EditAcompanhamentoPage({
         if (!token) {
             router.push("/login");
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const fetchAcompanhamento = async () => {
@@ -112,7 +112,7 @@ export default function EditAcompanhamentoPage({
                                 </div>
                             );
                         })}
-                        <ButtonWithLoading type="submit" loading={submitting}>
+                        <ButtonWithLoading type="submit" isLoading={submitting}>
                             Salvar
                         </ButtonWithLoading>
                     </form>

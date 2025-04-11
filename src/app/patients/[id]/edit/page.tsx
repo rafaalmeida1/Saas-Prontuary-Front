@@ -29,7 +29,7 @@ export default function EditPatientPage({
         if (!token) {
             router.push("/login");
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const fetchPatient = async () => {
@@ -205,7 +205,7 @@ export default function EditPatientPage({
                                 />
                             </div>
                         )}
-                        <ButtonWithLoading type="submit" loading={submitting}>
+                        <ButtonWithLoading type="submit" isLoading={submitting}>
                             Atualizar Paciente
                         </ButtonWithLoading>
                     </form>

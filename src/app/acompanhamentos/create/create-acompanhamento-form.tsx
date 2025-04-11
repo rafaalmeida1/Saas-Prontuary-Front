@@ -44,7 +44,7 @@ export function CreateAcompanhamentoForm() {
         if (!token) {
             router.push("/login");
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const prontuario_id = searchParams.get("prontuario_id");
@@ -126,7 +126,7 @@ export function CreateAcompanhamentoForm() {
                     <ButtonWithLoading
                         type="submit"
                         className="w-full"
-                        loading={loading}
+                        isLoading={loading}
                     >
                         <Save className="mr-2 h-4 w-4" /> Salvar Acompanhamento
                     </ButtonWithLoading>

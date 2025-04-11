@@ -7,6 +7,7 @@ interface ToastOptions {
   title?: string;
   description?: string;
   duration?: number;
+  variant?: 'default' | 'destructive';
 }
 
 const DEFAULT_DURATIONS = {
@@ -16,92 +17,133 @@ const DEFAULT_DURATIONS = {
   info: 3000,
 };
 
-class ToastService {
-  /**
-   * Show a success toast notification
-   */
-  success(message: string, options: Omit<ToastOptions, 'title'> = {}) {
-    toast({
-      title: options.title || 'Success',
-      description: message,
-      duration: options.duration || DEFAULT_DURATIONS.success,
-      variant: 'default',
-    });
-  }
+/**
+ * Show a success toast notification
+ */
+export function success(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+  toast({
+    title: 'Success',
+    description: message,
+    duration: options.duration || DEFAULT_DURATIONS.success,
+    variant: 'default',
+    ...options
+  });
+}
 
-  /**
-   * Show an error toast notification
-   */
-  error(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+/**
+ * Show an error toast notification
+ */
+export function error(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+  toast({
+    title: 'Error',
+    description: message,
+    duration: options.duration || DEFAULT_DURATIONS.error,
+    variant: 'destructive',
+    ...options
+  });
+}
+
+/**
+ * Show a warning toast notification
+ */
+export function warning(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+  toast({
+    title: 'Warning',
+    description: message,
+    duration: options.duration || DEFAULT_DURATIONS.warning,
+    variant: 'default',
+    ...options
+  });
+}
+
+/**
+ * Show an info toast notification
+ */
+export function info(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+  toast({
+    title: 'Info',
+    description: message,
+    duration: options.duration || DEFAULT_DURATIONS.info,
+    variant: 'default',
+    ...options
+  });
+}
+
+/**
+ * Handle API errors and show appropriate toast notifications
+ */
+export function handleError(error: unknown, customMessage?: string) {
+  if (error instanceof ApiError) {
     toast({
-      title: options.title || 'Error',
-      description: message,
-      duration: options.duration || DEFAULT_DURATIONS.error,
+      title: 'Error',
+      description: error.message,
+      duration: DEFAULT_DURATIONS.error,
       variant: 'destructive',
     });
-  }
-
-  /**
-   * Show a warning toast notification
-   */
-  warning(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+  } else if (error instanceof Error) {
     toast({
-      title: options.title || 'Warning',
-      description: message,
-      duration: options.duration || DEFAULT_DURATIONS.warning,
+      title: 'Error',
+      description: customMessage || error.message,
+      duration: DEFAULT_DURATIONS.error,
       variant: 'destructive',
     });
-  }
-
-  /**
-   * Show an info toast notification
-   */
-  info(message: string, options: Omit<ToastOptions, 'title'> = {}) {
+  } else {
     toast({
-      title: options.title || 'Information',
-      description: message,
-      duration: options.duration || DEFAULT_DURATIONS.info,
+      title: 'Error',
+      description: customMessage || 'An unexpected error occurred',
+      duration: DEFAULT_DURATIONS.error,
+      variant: 'destructive',
     });
-  }
-
-  /**
-   * Handle API errors and show appropriate toast notifications
-   * @param error Error object to handle
-   * @param customMessage Optional custom message to display
-   */
-  handleError(error: unknown, customMessage?: string) {
-    if (error instanceof ApiError) {
-      // Special handling for different error status codes
-      if (error.status === 401 || error.status === 403) {
-        this.error(
-          customMessage || 'Session expired. Please log in again.',
-          { title: 'Authentication Error' }
-        );
-        return;
-      }
-      
-      if (error.status >= 500) {
-        this.error(
-          customMessage || 'Server error. Please try again later.',
-          { title: 'Server Error' }
-        );
-        return;
-      }
-      
-      this.error(
-        customMessage || error.message,
-        { title: 'Error' }
-      );
-      return;
-    }
-    
-    // Generic error handling
-    const message = 
-      customMessage || 
-      (error instanceof Error ? error.message : 'An unexpected error occurred');
-    
-    this.error(message);
   }
 }
 
-export const toastService = new ToastService(); 
+/**
+ * Show a custom toast notification
+ */
+export function custom(options: ToastOptions & { title: string }) {
+  const { title, description, duration, variant, ...rest } = options;
+  toast({
+    title,
+    description,
+    duration: duration || DEFAULT_DURATIONS.success,
+    variant: variant || 'default',
+    ...rest
+  });
+}
+
+/**
+ * Show a toast notification for a promise
+ */
+export function promise<T>(
+  promise: Promise<T>,
+  options: {
+    loading: string;
+    success: string;
+    error: string;
+  }
+) {
+  const loadingToast = toast({
+    title: 'Loading',
+    description: options.loading,
+    duration: DEFAULT_DURATIONS.success,
+  });
+
+  promise
+    .then(() => {
+      loadingToast.dismiss();
+      toast({
+        title: 'Success',
+        description: options.success,
+        duration: DEFAULT_DURATIONS.success,
+      });
+    })
+    .catch((error) => {
+      loadingToast.dismiss();
+      toast({
+        title: 'Error',
+        description: options.error,
+        duration: DEFAULT_DURATIONS.error,
+        variant: 'destructive',
+      });
+    });
+}

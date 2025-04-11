@@ -12,7 +12,7 @@ import { Plus, Search, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { toastService } from '@/lib/toast-service';
+import { handleError } from '@/lib/toast-service';
 
 export default function PatientsPage() {
     const router = useRouter();
@@ -29,7 +29,7 @@ export default function PatientsPage() {
                 setFilteredPatients(data);
             } catch (error) {
                 console.error('Error fetching patients:', error);
-                toastService.handleError(error, 'Falha ao carregar pacientes');
+                handleError(error, 'Falha ao carregar pacientes');
                 // Initialize with empty arrays on error
                 setPatients([]);
                 setFilteredPatients([]);

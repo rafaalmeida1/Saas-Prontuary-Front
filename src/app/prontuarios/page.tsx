@@ -11,8 +11,8 @@ import { FilePlus, Search, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { toastService } from '@/lib/toast-service';
 import { formatDate } from '@/lib/utils';
+import { handleError } from '@/lib/toast-service'
 
 export default function ProntuariosPage() {
     const router = useRouter();
@@ -42,7 +42,7 @@ export default function ProntuariosPage() {
                 setFilteredProntuarios(prontuariosData);
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
-                toastService.handleError(error, 'Falha ao carregar prontuários');
+                handleError(error, 'Falha ao carregar prontuários');
                 setProntuarios([]);
                 setFilteredProntuarios([]);
             } finally {

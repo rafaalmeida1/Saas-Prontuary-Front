@@ -11,8 +11,8 @@ import { PlusCircle, Search, Stethoscope, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { toastService } from '@/lib/toast-service';
 import { formatDate } from '@/lib/utils';
+import { handleError } from '@/lib/toast-service'
 
 interface AcompanhamentoWithPatient extends Acompanhamento {
   pacienteNome?: string;
@@ -80,7 +80,7 @@ export default function AcompanhamentosPage() {
                 setFilteredAcompanhamentos(sortedAcompanhamentos);
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
-                toastService.handleError(error, 'Falha ao carregar acompanhamentos');
+                handleError(error, 'Falha ao carregar acompanhamentos');
                 setAcompanhamentos([]);
                 setFilteredAcompanhamentos([]);
             } finally {

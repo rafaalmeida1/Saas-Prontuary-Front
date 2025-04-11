@@ -27,7 +27,7 @@ export default function EditProntuarioPage({
         if (!token) {
             router.push("/login");
         }
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         const fetchProntuario = async () => {
@@ -161,7 +161,7 @@ export default function EditProntuarioPage({
                                 </div>
                             );
                         })}
-                        <ButtonWithLoading type="submit" loading={submitting}>
+                        <ButtonWithLoading type="submit" isLoading={submitting}>
                             Salvar
                         </ButtonWithLoading>
                     </form>
